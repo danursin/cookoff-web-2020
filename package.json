@@ -1,0 +1,47 @@
+{
+    "name": "cookoff-web-2020",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "axios": "^0.19.0",
+        "js-cookie": "^2.2.1",
+        "jwt-decode": "^2.2.0",
+        "lodash": "^4.17.15",
+        "react": "^16.11.0",
+        "react-dom": "^16.11.0",
+        "react-router-dom": "^5.1.2",
+        "react-scripts": "3.2.0",
+        "semantic-ui-css": "^2.4.1",
+        "semantic-ui-react": "^0.88.1"
+    },
+    "devDependencies": {
+        "@types/js-cookie": "^2.2.4",
+        "@types/jwt-decode": "^2.2.1",
+        "@types/lodash": "^4.14.146",
+        "@types/node": "12.12.7",
+        "@types/react": "16.9.11",
+        "@types/react-dom": "16.9.4",
+        "@types/react-router-dom": "^5.1.2",
+        "typescript": "3.7.2"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "deploy": "deploy.bat"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}

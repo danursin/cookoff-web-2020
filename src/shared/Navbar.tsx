@@ -20,6 +20,7 @@ const Navbar: React.FC = () => {
             <Menu.Menu position="right">
                 {!!user && (
                     <>
+                        <Menu.Item content={`Welcome ${user.Name}`} />
                         <Menu.Item content="Logout" icon="log out" link onClick={logout} />
                     </>
                 )}

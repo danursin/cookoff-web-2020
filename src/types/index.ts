@@ -17,8 +17,8 @@ export interface Cookoff {
     CookoffID: number;
     Title: string;
     AccessCode: string;
-    EventStartDate: Date;
-    EventEndDate: Date;
+    EventStartDate: string;
+    EventEndDate: string;
     HostParticipantID: number;
     HostFacebookID: string;
 }

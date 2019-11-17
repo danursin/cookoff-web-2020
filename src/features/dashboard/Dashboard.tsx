@@ -63,14 +63,14 @@ const Dashboard: React.FC = () => {
             <Card.Group>
                 {userCookoffs.map(c => {
                     const { CookoffID, Title, EventStartDate, EventEndDate } = c;
-                    const startDate = moment(EventStartDate);
-                    const endDate = moment(EventEndDate);
+                    const startDate = moment(EventStartDate.replace("Z", ""));
+                    const endDate = moment(EventEndDate.replace("Z", ""));
 
                     const eventDayString = startDate.format("dddd, MMMM Do YYYY");
                     const eventStartTimeString = startDate.format("h A");
                     const eventEndTimeString = endDate.format("h A");
                     return (
-                        <Card fluid color="grey" as={Link} to={`/cookoff/${CookoffID}`}>
+                        <Card fluid color="grey" as={Link} to={`/cookoff/${CookoffID}`} key={CookoffID}>
                             <Card.Content>
                                 <Card.Header content={Title} />
                                 <Card.Description content={eventDayString} />

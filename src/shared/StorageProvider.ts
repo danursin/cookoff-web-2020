@@ -4,7 +4,9 @@ import cookie from "js-cookie";
 const { accessTokenName } = config;
 
 export const storeToken = (value: string): void => {
-    cookie.set(accessTokenName, value);
+    cookie.set(accessTokenName, value, {
+        expires: 7
+    });
 };
 
 export const getToken = (): string | null => {

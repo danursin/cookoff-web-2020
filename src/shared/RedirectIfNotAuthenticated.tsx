@@ -11,7 +11,7 @@ const RedirectIfNotAuthenticated: React.FC<RedirectIfNotAuthenticatedProps> = (p
     const { user, logout } = useContext(AuthContext);
     const currentTime = Math.floor(Date.now() / 1000);
 
-    if (user && currentTime < user.exp) {
+    if (user && currentTime < user.exp!) {
         return children;
     }
 

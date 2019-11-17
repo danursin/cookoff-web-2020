@@ -4,11 +4,12 @@ import Axios from "axios";
 import { Form, Header, Image, Message } from "semantic-ui-react";
 import pot from "../../img/pot.png";
 import config from "../../config";
-import { Participant } from "../../types";
 import { useContext } from "react";
 import AuthContext from "../../shared/AuthContext";
 import { storeToken } from "../../shared/StorageProvider";
 import { Redirect } from "react-router";
+import decode from "jwt-decode";
+import { Participant } from "../../types";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -21,19 +22,21 @@ const Login: React.FC = () => {
             setError(false);
             setLoading(true);
             const url = `${config.cookoffApiUrl}/login`;
-            const { data } = await Axios.post<{ access_token: string; participant: Participant }>(url, { Username: username });
-            storeToken(data.access_token);
-            setUser(data.participant);
+            const { data } = await Axios.post(url, { Username: username });
+            const token = data[config.accessTokenName];
+            const user: Participant = decode(token);
+            storeToken(token);
+            setUser(user);
+            setLoading(false);
         } catch (err) {
             console.error(err);
             setError(true);
-        } finally {
             setLoading(false);
         }
     };
 
     if (user) {
-        return <Redirect to="dashboard" />;
+        return <Redirect to="/dashboard" />;
     }
 
     return (

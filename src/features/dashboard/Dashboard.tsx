@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <>
-            <Header icon="spoon" content="Your Cookoffs" color="grey" textAlign="center" size="huge" />
+            <Header icon="spoon" content="Your Cookoffs" color="grey" size="huge" />
             <Card.Group>
                 {userCookoffs.map(c => {
                     const { CookoffID, Title, EventStartDate, EventEndDate } = c;

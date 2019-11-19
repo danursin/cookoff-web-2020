@@ -6,7 +6,6 @@ import pot from "../../img/pot.png";
 import config from "../../config";
 import { useContext } from "react";
 import AuthContext from "../../shared/AuthContext";
-import { storeToken } from "../../shared/StorageProvider";
 import { Redirect } from "react-router";
 import decode from "jwt-decode";
 import { Participant } from "../../types";
@@ -22,10 +21,9 @@ const Login: React.FC = () => {
             setError(false);
             setLoading(true);
             const url = `${config.cookoffApiUrl}/login`;
-            const { data } = await Axios.post(url, { Username: username });
+            const { data } = await Axios.post(url, { Username: username }, { withCredentials: true });
             const token = data[config.accessTokenName];
             const user: Participant = decode(token);
-            storeToken(token);
             setUser(user);
             setLoading(false);
         } catch (err) {

@@ -1,11 +1,16 @@
 import axios from "axios";
 import config from "../config";
+import { getToken } from "../shared/StorageProvider";
 
-const { cookoffApiUrl } = config;
+const { cookoffApiUrl, accessTokenName } = config;
 
 const _axios = axios.create({
-    baseURL: cookoffApiUrl,
-    withCredentials: true
+    baseURL: cookoffApiUrl
+});
+
+_axios.interceptors.request.use(config => {
+    config.headers = { ...config.headers, [accessTokenName]: getToken() };
+    return config;
 });
 
 export const destroy = async (request: DestroyRequest): Promise<any> => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { Cookoff } from "../../types";
+import { Cookoff, CookoffEntry } from "../../types";
 import CookoffContext from "./CookoffContext";
 import { query, sproc } from "../../services/DataService";
 import SimpleLoader from "../../shared/SimpleLoader";
@@ -18,32 +18,31 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const { id } = props.match.params;
 
     const [cookoff, setCookoff] = useState<Cookoff>();
+    const [entries, setEntries] = useState<CookoffEntry[]>();
     const [userScores, setUserScores] = useState<EntryUserScore[]>();
-
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
         (async () => {
-            const [[cookoffData], scores] = await Promise.all([
+            const [[cookoffData], entries] = await Promise.all([
                 query<Cookoff>({
                     table: "Cookoff",
                     where: {
                         CookoffID: id
                     }
                 }),
-                sproc<EntryUserScore>({
-                    objectName: "GetCookoffParticipantScores",
+                sproc<CookoffEntry>({
+                    objectName: "GetCookoffEntries",
                     parameters: {
-                        CookoffID: id,
-                        ParticipantID: user!.ParticipantID
+                        CookoffID: id
                     }
                 })
             ]);
 
             setCookoff(cookoffData);
-            setUserScores(scores);
+            setEntries(entries);
         })();
-    }, [id, user, setUserScores]);
+    }, [id, user, setEntries]);
 
     if (!cookoff) {
         return <SimpleLoader message="Loading cookoff data..." />;
@@ -93,6 +92,8 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
             value={{
                 cookoff,
                 setCookoff,
+                entries,
+                setEntries,
                 userScores,
                 setUserScores
             }}

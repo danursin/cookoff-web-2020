@@ -5,31 +5,54 @@ import SimpleLoader from "../../shared/SimpleLoader";
 import { Accordion, AccordionPanelProps, Label, Header, Image } from "semantic-ui-react";
 import { SemanticShorthandItem } from "semantic-ui-react/dist/commonjs/generic";
 import config from "../../config";
+import { useEffect } from "react";
+import { sproc } from "../../services/DataService";
+import { EntryUserScore } from "./types";
+import AuthContext from "../../shared/AuthContext";
+import { CookoffEntry } from "../../types";
 
 const CookoffScores = () => {
-    const { userScores } = useContext(CookoffContext);
+    const { user } = useContext(AuthContext);
+    const { cookoff, userScores, setUserScores, entries } = useContext(CookoffContext);
+
+    useEffect(() => {
+        if (userScores) {
+            return;
+        }
+        (async () => {
+            const result = await sproc<EntryUserScore>({
+                objectName: "GetCookoffParticipantScores",
+                parameters: {
+                    CookoffID: cookoff!.CookoffID,
+                    ParticipantID: user!.ParticipantID
+                }
+            });
+            setUserScores(result);
+        })();
+    }, [cookoff, user, userScores, setUserScores]);
+
+    if (!entries) {
+        return <SimpleLoader message="Loading entries..." />;
+    }
 
     if (!userScores) {
         return <SimpleLoader message="Loading scores..." />;
     }
 
     const panels: SemanticShorthandItem<AccordionPanelProps>[] = userScores.map(us => {
+        const entry: CookoffEntry = entries.find(e => e.CookoffEntryID === us.CookoffEntryID)!;
         return {
             key: us.CookoffEntryID,
             title: {
                 content: (
                     <>
-                        <Label content={us.Title} color="grey" />
+                        <Label content={entry.Title} color="grey" />
                         <Header size="small" floated="right" color="grey" content={us.Score || "?"} />
                     </>
                 )
             },
             content: {
-                content: (
-                    <>
-                        <Image centered src={`${config.cookoffApiUrl}/file?key=${us.Filename}`} />
-                    </>
-                )
+                content: !!entry.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />
             }
         };
     });

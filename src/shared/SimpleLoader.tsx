@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimmer, Loader } from "semantic-ui-react";
+import { Dimmer, Icon, Header } from "semantic-ui-react";
 
 interface SimpleLoaderProps {
     message?: string;
@@ -8,7 +8,7 @@ const SimpleLoader = (props: SimpleLoaderProps) => {
     const { message } = props;
     return (
         <Dimmer active inverted inline="centered">
-            <Loader inline>{message || "Loading..."}</Loader>
+            <Header size="medium" color="grey" content={message || "Loading..."} icon={<Icon name="spoon" loading color="grey" />} />
         </Dimmer>
     );
 };

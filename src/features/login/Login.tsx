@@ -9,6 +9,7 @@ import AuthContext from "../../shared/AuthContext";
 import { Redirect } from "react-router";
 import decode from "jwt-decode";
 import { Participant } from "../../types";
+import { storeToken } from "../../shared/StorageProvider";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -25,7 +26,7 @@ const Login: React.FC = () => {
             const token = data[config.accessTokenName];
             const user: Participant = decode(token);
             setUser(user);
-            setLoading(false);
+            storeToken(token);
         } catch (err) {
             console.error(err);
             setError(true);

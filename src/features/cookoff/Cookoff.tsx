@@ -8,7 +8,7 @@ import { Header, Tab } from "semantic-ui-react";
 import CookoffScores from "./CookoffScores";
 import CookoffResults from "./CookoffResults";
 import CookoffComments from "./CookoffComments";
-import { EntryUserScore } from "./types";
+import { EntryUserScore, Comment } from "./types";
 import { useContext } from "react";
 import AuthContext from "../../shared/AuthContext";
 
@@ -20,6 +20,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const [cookoff, setCookoff] = useState<Cookoff>();
     const [entries, setEntries] = useState<CookoffEntry[]>();
     const [userScores, setUserScores] = useState<EntryUserScore[]>();
+    const [comments, setComments] = useState<Comment[]>();
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
@@ -95,7 +96,9 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 entries,
                 setEntries,
                 userScores,
-                setUserScores
+                setUserScores,
+                comments,
+                setComments
             }}
         >
             <Header icon="spoon" size="huge" content={cookoff.Title} color="grey" />

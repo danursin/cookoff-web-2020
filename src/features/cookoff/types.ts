@@ -4,3 +4,9 @@ export interface EntryUserScore {
     Score: number;
     Comment: string;
 }
+
+export interface Comment {
+    CookoffEntryID: number;
+    CookoffEntryScoreID: number;
+    Comment: string;
+}

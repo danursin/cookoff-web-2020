@@ -37,6 +37,8 @@ export interface CookoffEntry {
     Title: string;
     Description: string;
     Filename: string;
+    ParticipantID?: number;
+    ParticipantName: string;
     CookoffEntryScore: CookoffEntryScore;
 }
 

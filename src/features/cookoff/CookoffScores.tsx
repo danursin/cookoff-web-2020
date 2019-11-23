@@ -31,11 +31,7 @@ const CookoffScores = () => {
         })();
     }, [cookoff, user, userScores, setUserScores]);
 
-    if (!entries) {
-        return <SimpleLoader message="Loading entries..." />;
-    }
-
-    if (!userScores) {
+    if (!entries || !userScores) {
         return <SimpleLoader message="Loading scores..." />;
     }
 
@@ -47,12 +43,23 @@ const CookoffScores = () => {
                 content: (
                     <>
                         <Label content={entry.Title} color="grey" />
-                        <Header size="small" floated="right" color="grey" content={us.Score || "?"} />
+                        <Header
+                            size="small"
+                            floated="right"
+                            color="grey"
+                            content={us.Score === null || us.Score === undefined ? "?" : us.Score}
+                        />
                     </>
                 )
             },
             content: {
-                content: !!entry.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />
+                content: (
+                    <>
+                        {!!entry.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
+                        <Header content={us.Comment} color="grey" />
+                        <Header content={`Score: ${us.Score}`} size="small" color="grey" />
+                    </>
+                )
             }
         };
     });

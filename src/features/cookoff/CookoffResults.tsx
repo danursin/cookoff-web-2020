@@ -35,7 +35,7 @@ const CookoffResults = () => {
                 </Header.Content>
             </Header>
 
-            <Table compact>
+            <Table compact singleLine>
                 <Table.Header>
                     <Table.Row>
                         <Table.HeaderCell content="Rank" />

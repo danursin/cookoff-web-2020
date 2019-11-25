@@ -5,9 +5,10 @@ import { useEffect } from "react";
 import { sproc } from "../../services/DataService";
 import { Comment } from "./types";
 import SimpleLoader from "../../shared/SimpleLoader";
-import { Card, Label, List, Image, Grid, Header } from "semantic-ui-react";
+import { Card, Label, List, Image, Icon } from "semantic-ui-react";
 import config from "../../config";
 import { CookoffEntry } from "../../types";
+import { CSSProperties } from "react";
 
 const CookoffComments = () => {
     const { cookoff, entries, comments, setComments, results } = useContext(CookoffContext);
@@ -42,6 +43,12 @@ const CookoffComments = () => {
         return "th";
     };
 
+    const headerStyles: CSSProperties = {
+        fontSize: "1rem",
+        color: "grey",
+        verticalAlign: "middle"
+    };
+
     return (
         <>
             {results.map(r => {
@@ -51,34 +58,20 @@ const CookoffComments = () => {
                     <Card key={e.CookoffEntryID} fluid>
                         <Card.Content>
                             <Card.Header>
-                                <Grid verticalAlign="middle">
-                                    <Grid.Column width="2">
-                                        <Label
-                                            content={
-                                                <span>
-                                                    {e.Title} - {r.Rank}
-                                                    <sup>{getOrdinal(r.Rank)}</sup>
-                                                </span>
-                                            }
-                                            color="grey"
-                                        />
-                                    </Grid.Column>
-                                    <Grid.Column width="6">
-                                        <Header as="span" color="grey" size="tiny">
-                                            Average: {r.Average.toFixed(2)}
-                                        </Header>
-                                    </Grid.Column>
-                                    <Grid.Column width="8">
-                                        <Header
-                                            as="span"
-                                            color="grey"
-                                            floated="right"
-                                            size="tiny"
-                                            icon="user"
-                                            content={r.ParticipantName}
-                                        />
-                                    </Grid.Column>
-                                </Grid>
+                                <Label
+                                    size="small"
+                                    content={
+                                        <span>
+                                            {e.Title} - {r.Rank}
+                                            <sup>{getOrdinal(r.Rank)}</sup>
+                                        </span>
+                                    }
+                                    color="grey"
+                                />
+                                <span style={{ ...headerStyles, paddingLeft: "0.5rem" }}>Average: {r.Average.toFixed(2)}</span>
+                                <span style={{ ...headerStyles, float: "right", paddingTop: 2 }}>
+                                    <Icon name="user" /> {r.ParticipantName}
+                                </span>
                             </Card.Header>
                         </Card.Content>
                         <Card.Content textAlign="center">

@@ -10,3 +10,15 @@ export interface Comment {
     CookoffEntryScoreID: number;
     Comment: string;
 }
+
+export interface CookoffResult {
+    CookoffEntryID: number;
+    Title: string;
+    ParticipantID: number;
+    ParticipantName: string;
+    Average: number;
+    Maximum: number;
+    Minimum: number;
+    StandardDeviation: number;
+    Rank: number;
+}

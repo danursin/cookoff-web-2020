@@ -1,6 +1,6 @@
 import { Cookoff, CookoffEntry } from "../../types";
 import { createContext } from "react";
-import { EntryUserScore, Comment } from "./types";
+import { EntryUserScore, Comment, CookoffResult } from "./types";
 
 interface CookoffContextProps {
     cookoff?: Cookoff;
@@ -11,6 +11,8 @@ interface CookoffContextProps {
     setUserScores: (entries: EntryUserScore[]) => void;
     comments?: Comment[];
     setComments: (comments: Comment[]) => void;
+    results?: CookoffResult[];
+    setResults: (results: CookoffResult[]) => void;
 }
 
 export default createContext<CookoffContextProps>({
@@ -24,6 +26,9 @@ export default createContext<CookoffContextProps>({
         throw new Error("not implemented");
     },
     setComments: () => {
+        throw new Error("not implemented");
+    },
+    setResults: () => {
         throw new Error("not implemented");
     }
 });

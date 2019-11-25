@@ -8,7 +8,7 @@ import { Header, Tab } from "semantic-ui-react";
 import CookoffScores from "./CookoffScores";
 import CookoffResults from "./CookoffResults";
 import CookoffComments from "./CookoffComments";
-import { EntryUserScore, Comment } from "./types";
+import { EntryUserScore, Comment, CookoffResult } from "./types";
 import { useContext } from "react";
 import AuthContext from "../../shared/AuthContext";
 
@@ -21,6 +21,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const [entries, setEntries] = useState<CookoffEntry[]>();
     const [userScores, setUserScores] = useState<EntryUserScore[]>();
     const [comments, setComments] = useState<Comment[]>();
+    const [results, setResults] = useState<CookoffResult[]>();
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
@@ -45,9 +46,27 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
         })();
     }, [id, user, setEntries]);
 
+    useEffect(() => {
+        if (results || !cookoff || !cookoff.AreScoresReleased) {
+            return;
+        }
+
+        (async () => {
+            const data = await sproc({
+                objectName: "GetCookoffResults",
+                parameters: {
+                    CookoffID: cookoff.CookoffID
+                }
+            });
+            setResults(data);
+        })();
+    }, [cookoff, results]);
+
     if (!cookoff) {
         return <SimpleLoader message="Loading cookoff data..." />;
     }
+
+    const { AreScoresReleased } = cookoff;
 
     const panes = [
         {
@@ -65,9 +84,10 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
         {
             menuItem: {
                 content: "Results",
-                icon: "chart bar",
+                icon: AreScoresReleased ? "chart bar" : "lock",
                 color: "grey",
-                key: "results"
+                key: "results",
+                disabled: !AreScoresReleased
             },
             pane: {
                 key: "results",
@@ -77,9 +97,10 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
         {
             menuItem: {
                 content: "Comments",
-                icon: "comment alternate outline",
+                icon: AreScoresReleased ? "comment alternate outline" : "lock",
                 color: "grey",
-                key: "comments"
+                key: "comments",
+                disabled: !AreScoresReleased
             },
             pane: {
                 key: "comments",
@@ -98,7 +119,9 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 userScores,
                 setUserScores,
                 comments,
-                setComments
+                setComments,
+                results,
+                setResults
             }}
         >
             <Header icon="spoon" size="huge" content={cookoff.Title} color="grey" />

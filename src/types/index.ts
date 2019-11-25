@@ -16,11 +16,11 @@ export interface Participant {
 export interface Cookoff {
     CookoffID: number;
     Title: string;
-    AccessCode: string;
     EventStartDate: string;
     EventEndDate: string;
     HostParticipantID: number;
     HostFacebookID: string;
+    AreScoresReleased: boolean;
 }
 
 export interface CookoffParticipant {
@@ -37,8 +37,6 @@ export interface CookoffEntry {
     Title: string;
     Description: string;
     Filename: string;
-    ParticipantID?: number;
-    ParticipantName: string;
     CookoffEntryScore: CookoffEntryScore;
 }
 

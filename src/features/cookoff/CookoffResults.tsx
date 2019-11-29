@@ -35,60 +35,62 @@ const CookoffResults = () => {
                 </Header.Content>
             </Header>
 
-            <Table compact unstackable>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.HeaderCell content="Rank" />
-                        <Table.HeaderCell content="Title" />
-                        <Table.HeaderCell content="Entrant" />
-                        <Table.HeaderCell content="Avg" />
-                        <Table.HeaderCell content="Min" />
-                        <Table.HeaderCell content="Max" />
-                        <Table.HeaderCell content="SD (σ)" />
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {results.map(r => {
-                        const { Rank, Title, ParticipantName, Average, Minimum, Maximum, StandardDeviation } = r;
-                        const positive = r === mostAgreement;
-                        const negative = r === mostControversial;
-                        const style: CSSProperties | undefined = positive || negative ? { fontWeight: "bold" } : undefined;
-                        return (
-                            <Table.Row key={r.CookoffEntryID} positive={positive} negative={negative} style={style}>
-                                <Table.Cell>
-                                    {positive && (
-                                        <Popup
-                                            content="This was the most agreed upon entry"
-                                            trigger={
-                                                <span>
-                                                    {Rank} <Icon name="info circle" />
-                                                </span>
-                                            }
-                                        />
-                                    )}
-                                    {negative && (
-                                        <Popup
-                                            content="This was the most controversial entry"
-                                            trigger={
-                                                <span>
-                                                    {Rank} <Icon name="info circle" />
-                                                </span>
-                                            }
-                                        />
-                                    )}
-                                    {!positive && !negative && <span>{Rank}</span>}
-                                </Table.Cell>
-                                <Table.Cell content={Title} />
-                                <Table.Cell content={ParticipantName} />
-                                <Table.Cell content={Average.toFixed(2)} />
-                                <Table.Cell content={Minimum} />
-                                <Table.Cell content={Maximum} />
-                                <Table.Cell content={StandardDeviation.toFixed(2)} />
-                            </Table.Row>
-                        );
-                    })}
-                </Table.Body>
-            </Table>
+            <div style={{ overflowY: "auto" }}>
+                <Table compact unstackable>
+                    <Table.Header>
+                        <Table.Row>
+                            <Table.HeaderCell content="Rank" />
+                            <Table.HeaderCell content="Title" />
+                            <Table.HeaderCell content="Entrant" />
+                            <Table.HeaderCell content="Avg" />
+                            <Table.HeaderCell content="Min" />
+                            <Table.HeaderCell content="Max" />
+                            <Table.HeaderCell content="SD (σ)" />
+                        </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                        {results.map(r => {
+                            const { Rank, Title, ParticipantName, Average, Minimum, Maximum, StandardDeviation } = r;
+                            const positive = r === mostAgreement;
+                            const negative = r === mostControversial;
+                            const style: CSSProperties | undefined = positive || negative ? { fontWeight: "bold" } : undefined;
+                            return (
+                                <Table.Row key={r.CookoffEntryID} positive={positive} negative={negative} style={style}>
+                                    <Table.Cell>
+                                        {positive && (
+                                            <Popup
+                                                content="This was the most agreed upon entry"
+                                                trigger={
+                                                    <span>
+                                                        {Rank} <Icon name="info circle" />
+                                                    </span>
+                                                }
+                                            />
+                                        )}
+                                        {negative && (
+                                            <Popup
+                                                content="This was the most controversial entry"
+                                                trigger={
+                                                    <span>
+                                                        {Rank} <Icon name="info circle" />
+                                                    </span>
+                                                }
+                                            />
+                                        )}
+                                        {!positive && !negative && <span>{Rank}</span>}
+                                    </Table.Cell>
+                                    <Table.Cell content={Title} />
+                                    <Table.Cell content={ParticipantName} />
+                                    <Table.Cell content={Average.toFixed(2)} />
+                                    <Table.Cell content={Minimum} />
+                                    <Table.Cell content={Maximum} />
+                                    <Table.Cell content={StandardDeviation.toFixed(2)} />
+                                </Table.Row>
+                            );
+                        })}
+                    </Table.Body>
+                </Table>
+            </div>
         </>
     );
 };

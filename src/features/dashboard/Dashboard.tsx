@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Header, Card } from "semantic-ui-react";
+import { Header, Card, Button } from "semantic-ui-react";
 import { useContext } from "react";
 import AppContext from "../../shared/AppContext";
 import { useEffect } from "react";
@@ -60,6 +60,16 @@ const Dashboard: React.FC = () => {
     return (
         <>
             <Header icon="spoon" content="Your Cookoffs" color="grey" size="huge" />
+            {user!.IsAdmin && (
+                <Button
+                    icon="plus circle"
+                    color="blue"
+                    content="Host a Cookoff"
+                    as={Link}
+                    to="/manage/new"
+                    style={{ marginBottom: "1rem" }}
+                />
+            )}
             <Card.Group>
                 {userCookoffs.map(c => {
                     const { CookoffID, Title, EventStartDate, EventEndDate } = c;

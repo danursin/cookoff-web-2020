@@ -55,7 +55,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
             const data = await sproc({
                 objectName: "GetCookoffResults",
                 parameters: {
-                    CookoffID: cookoff.CookoffID
+                    CookoffID: cookoff.CookoffID!
                 }
             });
             setResults(data);

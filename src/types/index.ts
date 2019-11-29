@@ -14,12 +14,11 @@ export interface Participant {
 }
 
 export interface Cookoff {
-    CookoffID: number;
+    CookoffID?: number;
     Title: string;
     EventStartDate: string;
     EventEndDate: string;
     HostParticipantID: number;
-    HostFacebookID: string;
     AreScoresReleased: boolean;
 }
 

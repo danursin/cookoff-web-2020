@@ -20,7 +20,7 @@ const CookoffComments = () => {
         (async () => {
             const data = await sproc<Comment>({
                 objectName: "GetCookoffComments",
-                parameters: { CookoffID: cookoff!.CookoffID }
+                parameters: { CookoffID: cookoff!.CookoffID! }
             });
             setComments(data);
         })();
@@ -68,7 +68,7 @@ const CookoffComments = () => {
                                     }
                                     color="grey"
                                 />
-                                <span style={{ ...headerStyles, paddingLeft: "0.5rem" }}>Average: {r.Average.toFixed(2)}</span>
+                                <span style={{ ...headerStyles, paddingLeft: "0.5rem" }}>Avg: {r.Average.toFixed(2)}</span>
                                 <span style={{ ...headerStyles, float: "right", paddingTop: 2 }}>
                                     <Icon name="user" /> {r.ParticipantName}
                                 </span>

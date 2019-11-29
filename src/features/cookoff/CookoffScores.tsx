@@ -23,7 +23,7 @@ const CookoffScores = () => {
             const result = await sproc<EntryUserScore>({
                 objectName: "GetCookoffParticipantScores",
                 parameters: {
-                    CookoffID: cookoff!.CookoffID,
+                    CookoffID: cookoff!.CookoffID!,
                     ParticipantID: user!.ParticipantID
                 }
             });

@@ -8,7 +8,7 @@ const Navbar: React.FC = () => {
     const { user, logout } = useContext(AuthContext);
 
     return (
-        <Menu fluid compact>
+        <Menu fluid compact tabular>
             <Menu.Item
                 as={Link}
                 to="/dashboard"

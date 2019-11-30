@@ -40,10 +40,13 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
             const [data] = await query<Cookoff>({
                 table: "Cookoff",
                 where: {
-                    id: parsedID
+                    CookoffID: parsedID
                 }
             });
+            data.EventStartDate = data.EventStartDate.replace("Z", "");
+            data.EventEndDate = data.EventEndDate.replace("Z", "");
             setCookoff(data);
+            setLoading(false);
         })();
     }, [parsedID, setLoading, setCookoff]);
 

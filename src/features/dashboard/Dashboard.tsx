@@ -64,6 +64,7 @@ const Dashboard: React.FC = () => {
                 <Button
                     icon="plus circle"
                     color="blue"
+                    fluid
                     content="Host a Cookoff"
                     as={Link}
                     to="/manage/new"

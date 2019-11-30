@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import { Cookoff, CookoffEntry } from "../../types";
 import CookoffContext from "./CookoffContext";
 import { query, sproc } from "../../services/DataService";
 import SimpleLoader from "../../shared/SimpleLoader";
-import { Header, Tab } from "semantic-ui-react";
+import { Header, Tab, Button } from "semantic-ui-react";
 import CookoffScores from "./CookoffScores";
 import CookoffResults from "./CookoffResults";
 import CookoffComments from "./CookoffComments";
@@ -125,6 +125,17 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
             }}
         >
             <Header icon="spoon" size="huge" content={cookoff.Title} color="grey" />
+            {user!.IsAdmin && (
+                <Button
+                    fluid
+                    color="blue"
+                    icon="cog"
+                    content="Manage Cookoff"
+                    as={Link}
+                    to={`/manage/${cookoff.CookoffID!}`}
+                    style={{ marginBottom: "1rem" }}
+                />
+            )}
 
             <Tab panes={panes} renderActiveOnly={false} menu={{ secondary: true, pointing: true }} />
         </CookoffContext.Provider>

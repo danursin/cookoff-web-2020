@@ -11,6 +11,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { useEffect } from "react";
 import SimpleLoader from "../../shared/SimpleLoader";
 import { query } from "../../services/DataService";
+import { ManagedParticipant } from "./types";
 
 interface ManageProps extends RouteComponentProps<{ id: string }> {}
 
@@ -29,6 +30,7 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
     };
 
     const [cookoff, setCookoff] = useState<Cookoff>(defaultCookoff);
+    const [participants, setParticipants] = useState<ManagedParticipant[]>();
 
     useEffect(() => {
         if (!parsedID) {
@@ -64,7 +66,11 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
             )
         },
         {
-            menuItem: "Participants",
+            menuItem: {
+                content: "Participants",
+                color: "grey",
+                disabled: !cookoff || !cookoff.CookoffID
+            },
             render: () => (
                 <Tab.Pane>
                     <CookoffParticipants />
@@ -72,7 +78,12 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
             )
         },
         {
-            menuItem: "Entries",
+            menuItem: {
+                content: "Entries",
+                color: "grey",
+                disabled: !cookoff || !cookoff.CookoffID
+            },
+            disabled: !cookoff || !cookoff.CookoffID,
             render: () => (
                 <Tab.Pane>
                     <CookoffEntries />
@@ -85,7 +96,9 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
         <ManageContext.Provider
             value={{
                 cookoff,
-                setCookoff
+                setCookoff,
+                participants,
+                setParticipants
             }}
         >
             <Tab panes={panes} menu={{ secondary: true, pointing: true }} />

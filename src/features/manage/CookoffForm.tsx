@@ -21,8 +21,8 @@ const CookoffForm: React.FC = () => {
     const onSubmit = async () => {
         setIsLoading(true);
         let { Title, EventStartDate, EventEndDate, AreScoresReleased } = cookoff!;
-        EventStartDate = `${EventStartDate}.00`;
-        EventEndDate = `${EventEndDate}.00`;
+        EventStartDate = `${EventStartDate}:00`;
+        EventEndDate = `${EventEndDate}:00`;
 
         if (cookoff!.CookoffID) {
             await update({

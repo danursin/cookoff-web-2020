@@ -5,7 +5,7 @@ import SimpleLoader from "../../shared/SimpleLoader";
 import { useEffect } from "react";
 import { sproc } from "../../services/DataService";
 import { ManagedParticipant } from "./types";
-import { List } from "semantic-ui-react";
+import { List, Table, Button } from "semantic-ui-react";
 
 const CookoffParticipants: React.FC = () => {
     const { cookoff, participants, setParticipants } = useContext(ManageContext);
@@ -31,20 +31,24 @@ const CookoffParticipants: React.FC = () => {
     }
 
     return (
-        <List divided relaxed>
-            {participants.map(p => {
-                const { ParticipantID, Name, Username, IsParticipant } = p;
-                return (
-                    <List.Item key={ParticipantID}>
-                        <List.Icon name="user" size="large" verticalAlign="middle" />
-                        <List.Content>
-                            <List.Header as="a">{Name}</List.Header>
-                            <List.Description as="a">{Username}</List.Description>
-                        </List.Content>
-                    </List.Item>
-                );
-            })}
-        </List>
+        <Table compact="very" unstackable>
+            <Table.Body>
+                {participants.map(p => {
+                    const { Name, Username, ParticipantID } = p;
+                    return (
+                        <Table.Row key={ParticipantID}>
+                            <Table.Cell>
+                                <Button icon="info circle" color="blue" basic size="small" />
+                            </Table.Cell>
+                            <Table.Cell>{`${Name} (${Username})`}</Table.Cell>
+                            <Table.Cell>
+                                <Button icon="plus circle" color="green" basic size="small" />
+                            </Table.Cell>
+                        </Table.Row>
+                    );
+                })}
+            </Table.Body>
+        </Table>
     );
 };
 

@@ -69,6 +69,7 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
             menuItem: {
                 content: "Participants",
                 color: "grey",
+                key: "participants",
                 disabled: !cookoff || !cookoff.CookoffID
             },
             render: () => (
@@ -81,6 +82,7 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
             menuItem: {
                 content: "Entries",
                 color: "grey",
+                key: "entries",
                 disabled: !cookoff || !cookoff.CookoffID
             },
             disabled: !cookoff || !cookoff.CookoffID,

@@ -3,4 +3,5 @@ export interface ManagedParticipant {
     Name: string;
     Username: string;
     IsParticipant: boolean;
+    IsLoading?: boolean;
 }

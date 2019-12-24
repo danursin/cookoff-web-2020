@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form } from "semantic-ui-react";
+import { Form, Grid, Button } from "semantic-ui-react";
 import { useContext } from "react";
 import ManageContext from "./ManageContext";
 import { update, insert } from "../../services/DataService";
@@ -38,7 +38,7 @@ const CookoffForm: React.FC = () => {
                 }
             });
         } else {
-            const result = await insert({
+            const { CookoffID } = await insert({
                 table: "Cookoff",
                 values: {
                     HostParticipantID: cookoff!.HostParticipantID,
@@ -49,7 +49,7 @@ const CookoffForm: React.FC = () => {
                 }
             });
             // get new cookoff ID
-            setCookoff({ ...cookoff! });
+            setCookoff({ ...cookoff!, CookoffID });
         }
         setIsLoading(false);
     };
@@ -96,10 +96,14 @@ const CookoffForm: React.FC = () => {
                 onChange={(e, data) => setCookoff({ ...cookoff!, AreScoresReleased: !!data.checked })}
             />
 
-            <Form.Group>
-                <Form.Button content="Cancel" type="button" icon="times" color="grey" width={8} onClick={goBack} />
-                <Form.Button content="Save" type="submit" icon="save" color="blue" width={8} />
-            </Form.Group>
+            <Grid columns="equal">
+                <Grid.Column>
+                    <Button content="Cancel" type="button" icon="times" color="grey" fluid onClick={goBack} />
+                </Grid.Column>
+                <Grid.Column>
+                    <Button content="Save" type="submit" icon="save" color="blue" fluid />
+                </Grid.Column>
+            </Grid>
         </Form>
     );
 };

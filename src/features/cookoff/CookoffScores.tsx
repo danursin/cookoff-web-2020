@@ -24,7 +24,7 @@ const CookoffScores = () => {
                 objectName: "GetCookoffParticipantScores",
                 parameters: {
                     CookoffID: cookoff!.CookoffID!,
-                    ParticipantID: user!.ParticipantID
+                    ParticipantID: user!.ParticipantID!
                 }
             });
             setUserScores(result);

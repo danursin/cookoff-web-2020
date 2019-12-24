@@ -25,7 +25,7 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
         Title: "",
         EventStartDate: "",
         EventEndDate: "",
-        HostParticipantID: user!.ParticipantID,
+        HostParticipantID: user!.ParticipantID!,
         AreScoresReleased: false
     };
 

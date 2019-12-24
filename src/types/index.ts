@@ -1,16 +1,9 @@
 export interface Participant {
-    ParticipantID: number;
+    ParticipantID?: number;
     Username: string;
     Name: string;
     IsAdmin: boolean;
     exp?: number;
-}
-
-export interface Participant {
-    ParticipantID: number;
-    Name: string;
-    Username: string;
-    IsAdmin: boolean;
 }
 
 export interface Cookoff {

@@ -1,7 +1,8 @@
 import React, { useState, FormEvent } from "react";
 import { Participant } from "../../types";
-import { Modal, Form } from "semantic-ui-react";
+import { Modal, Form, Message } from "semantic-ui-react";
 import { useEffect } from "react";
+import { update, insert } from "../../services/DataService";
 
 interface ParticipantEditModalProps {
     open: boolean;
@@ -14,20 +15,57 @@ const ParticipantEditModal: React.FC<ParticipantEditModalProps> = (props: Partic
     const { onClose, participant, open, onSaveComplete } = props;
     const [localParticipant, setLocalParticipant] = useState<Participant>({ ...participant });
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>();
 
     useEffect(() => {
         setLocalParticipant({ ...participant });
+        setError(undefined);
     }, [participant]);
 
-    const onSubmit = (event: FormEvent) => {
+    const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        onSaveComplete(localParticipant);
+        setLoading(true);
+
+        const { Name, Username, IsAdmin } = localParticipant;
+
+        try {
+            if (localParticipant.ParticipantID) {
+                await update({
+                    table: "Participant",
+                    values: {
+                        Name: Name || null,
+                        Username: Username || null,
+                        IsAdmin: !!IsAdmin
+                    },
+                    where: {
+                        ParticipantID: localParticipant.ParticipantID
+                    }
+                });
+            } else {
+                const { ParticipantID } = await insert({
+                    table: "Participant",
+                    values: {
+                        Name: Name || null,
+                        Username: Username || null,
+                        IsAdmin: !!IsAdmin
+                    }
+                });
+                localParticipant.ParticipantID = ParticipantID;
+            }
+            onSaveComplete(localParticipant);
+        } catch (err) {
+            setError(err.message);
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <Modal onClose={onClose} closeIcon size="small" open={open}>
             <Modal.Header content={localParticipant.ParticipantID ? "Edit Participant" : "Add Participant"} />
             <Modal.Content scrolling>
+                {!!error && <Message error icon="exclamation triangle" content={error} />}
                 <Form onSubmit={onSubmit} loading={loading}>
                     <Form.Input
                         placeholder="Participant Name"
@@ -46,6 +84,7 @@ const ParticipantEditModal: React.FC<ParticipantEditModalProps> = (props: Partic
 
                     <Form.Checkbox
                         toggle
+                        label="Is Administrator?"
                         checked={localParticipant.IsAdmin}
                         onChange={(data, { checked }) => setLocalParticipant({ ...localParticipant, IsAdmin: !!checked })}
                     />

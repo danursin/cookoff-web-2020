@@ -8,6 +8,7 @@ import { ManagedParticipant } from "./types";
 import { Table, Button, Icon } from "semantic-ui-react";
 import ParticipantEditModal from "./ParticipantEditModal";
 import { Participant } from "../../types";
+import { sortBy } from "lodash";
 
 const defaultParticipant: Participant = {
     Name: "",
@@ -98,6 +99,22 @@ const CookoffParticipants: React.FC = () => {
         );
     };
 
+    const onSaveComplete = (participant: Participant) => {
+        const existingParticipant = participants.find(p => p.ParticipantID === participant.ParticipantID);
+        if (existingParticipant) {
+            Object.assign(existingParticipant, participant);
+        } else {
+            const mp: ManagedParticipant = {
+                ...participant,
+                IsParticipant: false,
+                ParticipantID: participant.ParticipantID!
+            };
+            participants.push(mp);
+        }
+        setParticipants(sortBy(participants, "Name"));
+        setModalOpen(false);
+    };
+
     return (
         <>
             <Button
@@ -114,12 +131,12 @@ const CookoffParticipants: React.FC = () => {
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 participant={selectedParticipant}
-                onSaveComplete={() => console.log("closed")}
+                onSaveComplete={onSaveComplete}
             />
             <Table compact="very" unstackable>
                 <Table.Body>
                     {participants.map(p => {
-                        const { Name, Username, ParticipantID, IsParticipant, IsLoading } = p;
+                        const { Name, Username, ParticipantID, IsParticipant, IsLoading, IsAdmin } = p;
                         return (
                             <Table.Row key={ParticipantID}>
                                 <Table.Cell>
@@ -134,7 +151,10 @@ const CookoffParticipants: React.FC = () => {
                                         }}
                                     />
                                 </Table.Cell>
-                                <Table.Cell>{`${Name} (${Username})`}</Table.Cell>
+                                <Table.Cell>
+                                    {`${Name} (${Username})`}{" "}
+                                    {IsAdmin && <Icon name="cog" color="grey" title="This user is an administrator" />}
+                                </Table.Cell>
                                 <Table.Cell textAlign="right">
                                     <Button
                                         icon={

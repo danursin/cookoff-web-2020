@@ -141,7 +141,7 @@ const CookoffParticipants: React.FC = () => {
                             <Table.Row key={ParticipantID}>
                                 <Table.Cell>
                                     <Button
-                                        icon="info circle"
+                                        icon="pencil"
                                         color="blue"
                                         basic
                                         size="small"

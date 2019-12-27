@@ -1,3 +1,5 @@
+import { CookoffEntry } from "../../types";
+
 export interface ManagedParticipant {
     ParticipantID: number;
     Name: string;
@@ -6,3 +8,5 @@ export interface ManagedParticipant {
     IsParticipant: boolean;
     IsLoading?: boolean;
 }
+
+export type Entry = CookoffEntry & { ParticipantID: number };

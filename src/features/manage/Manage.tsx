@@ -11,7 +11,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { useEffect } from "react";
 import SimpleLoader from "../../shared/SimpleLoader";
 import { query } from "../../services/DataService";
-import { ManagedParticipant } from "./types";
+import { ManagedParticipant, Entry } from "./types";
 
 interface ManageProps extends RouteComponentProps<{ id: string }> {}
 
@@ -31,6 +31,7 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
 
     const [cookoff, setCookoff] = useState<Cookoff>(defaultCookoff);
     const [participants, setParticipants] = useState<ManagedParticipant[]>();
+    const [entries, setEntries] = useState<Entry[]>();
 
     useEffect(() => {
         if (!parsedID) {
@@ -100,7 +101,9 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
                 cookoff,
                 setCookoff,
                 participants,
-                setParticipants
+                setParticipants,
+                entries,
+                setEntries
             }}
         >
             <Tab panes={panes} menu={{ secondary: true, pointing: true }} />

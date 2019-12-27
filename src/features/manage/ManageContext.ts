@@ -1,16 +1,21 @@
 import { Cookoff } from "../../types";
 import { createContext } from "react";
-import { ManagedParticipant } from "./types";
+import { ManagedParticipant, Entry } from "./types";
 
 interface ManageContextProps {
     cookoff?: Cookoff;
     setCookoff: (cookoff: Cookoff) => void;
     participants?: ManagedParticipant[];
     setParticipants: (participants: ManagedParticipant[]) => void;
+    entries?: Entry[];
+    setEntries: (entries: Entry[]) => void;
 }
 
 export default createContext<ManageContextProps>({
     setCookoff: () => {
+        throw new Error("not implemented");
+    },
+    setEntries: () => {
         throw new Error("not implemented");
     },
     setParticipants: () => {

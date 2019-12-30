@@ -6,11 +6,17 @@ import SimpleLoader from "../../shared/SimpleLoader";
 import { sproc } from "../../services/DataService";
 import { Entry, ManagedParticipant } from "./types";
 import { Table, Button, Header } from "semantic-ui-react";
+import EntryEditModal from "./EntryEditModal";
+import { sortBy } from "lodash";
+
+const defaultEntry: Entry = {
+    Title: ""
+};
 
 const CookoffEntries: React.FC = () => {
     const { cookoff, participants, setParticipants, entries, setEntries } = useContext(ManageContext);
 
-    const [selectedEntry, setSelectedEntry] = useState<Entry>();
+    const [selectedEntry, setSelectedEntry] = useState<Entry>(defaultEntry);
     const [modalOpen, setModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -49,9 +55,30 @@ const CookoffEntries: React.FC = () => {
         return <SimpleLoader />;
     }
 
+    const onSaveComplete = (entry: Entry) => {
+        const existingEntry = entries.find(p => p.CookoffEntryID === entry.CookoffEntryID);
+        if (existingEntry) {
+            Object.assign(existingEntry, entry);
+        } else {
+            entries.push(entry);
+        }
+        setEntries(sortBy(entries, "Title"));
+        setModalOpen(false);
+    };
+
     return (
         <>
-            <Button color="blue" fluid icon="plus circle" content="Add Entry" />
+            <Button
+                color="blue"
+                fluid
+                icon="plus circle"
+                content="Add Entry"
+                onClick={() => {
+                    setSelectedEntry(defaultEntry);
+                    setModalOpen(true);
+                }}
+            />
+            <EntryEditModal open={modalOpen} onClose={() => setModalOpen(false)} entry={selectedEntry} onSaveComplete={onSaveComplete} />
             <Table compact="very" unstackable>
                 <Table.Body>
                     {!entries.length && (

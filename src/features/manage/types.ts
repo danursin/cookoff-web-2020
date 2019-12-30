@@ -9,4 +9,9 @@ export interface ManagedParticipant {
     IsLoading?: boolean;
 }
 
-export type Entry = CookoffEntry & { ParticipantID: number };
+export interface Entry {
+    CookoffEntryID?: number;
+    Title: string;
+    Filename?: string;
+    ParticipantID?: number;
+}

@@ -57,7 +57,7 @@ const CookoffScores = () => {
                     <>
                         {!!entry.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
                         <Header content={us.Comment} color="grey" />
-                        <Header content={`Score: ${us.Score}`} size="small" color="grey" />
+                        <Header content={`Score: ${us.Score || "?"}`} size="small" color="grey" />
                     </>
                 )
             }

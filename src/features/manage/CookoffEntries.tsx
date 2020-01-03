@@ -87,8 +87,8 @@ const CookoffEntries: React.FC = () => {
                         </Table.Row>
                     )}
                     {entries.map(e => {
-                        const { CookoffEntryID, Title, ParticipantID } = e;
-                        const { Name, Username } = participants.find(p => p.ParticipantID === ParticipantID)!;
+                        const { CookoffEntryID, Title, CookoffParticipantID } = e;
+                        const { Name, Username } = participants.find(p => p.CookoffParticipantID === CookoffParticipantID)!;
                         return (
                             <Table.Row key={CookoffEntryID}>
                                 <Table.Cell>

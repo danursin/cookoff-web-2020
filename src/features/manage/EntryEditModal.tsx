@@ -1,9 +1,10 @@
-import React, { useState, FormEvent } from "react";
-import { Modal, Form, Message, Image } from "semantic-ui-react";
+import React, { useState, FormEvent, useContext } from "react";
+import { Modal, Form, Message, Image, DropdownItemProps } from "semantic-ui-react";
 import { useEffect } from "react";
-import { update, insert } from "../../services/DataService";
+import { update, insert, uploadFile } from "../../services/DataService";
 import { Entry } from "./types";
 import config from "../../config";
+import ManageContext from "./ManageContext";
 
 interface EntryEditModalProps {
     open: boolean;
@@ -17,7 +18,9 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
     const [localEntry, setLocalEntry] = useState<Entry>({ ...entry });
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>();
-    const [imageDataUrl, setImageDataUrl] = useState<string>();
+    const [dataUri, setDataUri] = useState<string>();
+
+    const { participants } = useContext(ManageContext);
 
     useEffect(() => {
         setLocalEntry({ ...entry });
@@ -27,7 +30,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
     const onImageChange = async (event: React.FormEvent<HTMLInputElement>) => {
         const files = event.currentTarget.files;
         if (!files || !files.length) {
-            setImageDataUrl(undefined);
+            setDataUri(undefined);
             return;
         }
         const file = files[0];
@@ -42,7 +45,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
             );
             reader.readAsDataURL(file);
         });
-        setImageDataUrl(url);
+        setDataUri(url);
     };
 
     const onSubmit = async (event: FormEvent) => {
@@ -50,21 +53,23 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
 
         setLoading(true);
 
-        const { Title } = localEntry;
+        const { Title, CookoffParticipantID } = localEntry;
 
         const values: any = {
-            Title: Title || null
+            Title: Title || null,
+            CookoffParticipantID
         };
 
-        if (imageDataUrl) {
-            const filename = await null;
+        if (dataUri) {
+            const filename = await uploadFile(dataUri);
             values.Filename = filename;
+            localEntry.Filename = filename;
         }
 
         try {
             if (localEntry.CookoffEntryID) {
                 await update({
-                    table: "Entry",
+                    table: "CookoffEntry",
                     values,
                     where: {
                         CookoffEntryID: localEntry.CookoffEntryID
@@ -72,7 +77,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                 });
             } else {
                 const { CookoffEntryID } = await insert({
-                    table: "Entry",
+                    table: "CookoffEntry",
                     values
                 });
                 localEntry.CookoffEntryID = CookoffEntryID;
@@ -85,6 +90,13 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
             setLoading(false);
         }
     };
+    const options: DropdownItemProps[] = participants!
+        .filter(p => p.IsParticipant)
+        .map(p => ({
+            key: p.CookoffParticipantID,
+            value: p.CookoffParticipantID,
+            text: `${p.Name} (${p.Username})`
+        }));
 
     const srcUrl = localEntry.Filename ? `${config.cookoffApiUrl}/file?key=${localEntry.Filename}` : null;
     return (
@@ -102,10 +114,20 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                         onChange={(e, { value }) => setLocalEntry({ ...localEntry, Title: value })}
                     />
 
+                    <Form.Dropdown
+                        label="Entrant"
+                        placeholder="Entrant"
+                        selection
+                        required
+                        options={options}
+                        value={localEntry.CookoffParticipantID}
+                        onChange={(e, { value }) => setLocalEntry({ ...localEntry, CookoffParticipantID: value as number })}
+                    />
+
                     <Form.Input placeholder="Entry Image" fluid maxLength="1" type="file" label="Entry Image" onChange={onImageChange} />
 
-                    {(!!srcUrl || !!imageDataUrl) && (
-                        <Image src={srcUrl || imageDataUrl} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />
+                    {(!!srcUrl || !!dataUri) && (
+                        <Image src={srcUrl || dataUri} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />
                     )}
 
                     <Form.Button fluid color="blue" content="Save" icon="save" type="submit" />

@@ -38,6 +38,14 @@ export const sproc = async <T = any>(request: SprocRequest): Promise<T[]> => {
     return data;
 };
 
+export const uploadFile = async (data_uri: string): Promise<string> => {
+    const request: { data_uri: string } = { data_uri };
+    const {
+        data: { filekey }
+    } = await _axios.post<{ filekey: string }>("/file", request);
+    return filekey;
+};
+
 export interface DestroyRequest {
     table: string;
     where: number[] | { [key: string]: any };

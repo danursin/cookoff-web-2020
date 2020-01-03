@@ -51,7 +51,7 @@ const CookoffParticipants: React.FC = () => {
                 return p;
             })
         );
-        await insert({
+        const { CookoffParticipantID } = await insert({
             table: "CookoffParticipant",
             values: {
                 CookoffID: cookoff!.CookoffID,
@@ -62,6 +62,7 @@ const CookoffParticipants: React.FC = () => {
             participants.map(p => {
                 if (p.ParticipantID === participantID) {
                     p.IsParticipant = true;
+                    p.CookoffParticipantID = CookoffParticipantID;
                     p.IsLoading = false;
                 }
                 return p;

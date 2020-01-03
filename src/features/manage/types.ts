@@ -1,7 +1,6 @@
-import { CookoffEntry } from "../../types";
-
 export interface ManagedParticipant {
     ParticipantID: number;
+    CookoffParticipantID?: number;
     Name: string;
     Username: string;
     IsAdmin: boolean;
@@ -14,4 +13,5 @@ export interface Entry {
     Title: string;
     Filename?: string;
     ParticipantID?: number;
+    CookoffParticipantID?: number;
 }

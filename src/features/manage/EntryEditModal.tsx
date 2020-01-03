@@ -127,7 +127,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                     <Form.Input placeholder="Entry Image" fluid maxLength="1" type="file" label="Entry Image" onChange={onImageChange} />
 
                     {(!!srcUrl || !!dataUri) && (
-                        <Image src={srcUrl || dataUri} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />
+                        <Image src={dataUri || srcUrl} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />
                     )}
 
                     <Form.Button fluid color="blue" content="Save" icon="save" type="submit" />

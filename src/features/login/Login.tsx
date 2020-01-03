@@ -10,6 +10,7 @@ import { Redirect } from "react-router";
 import decode from "jwt-decode";
 import { Participant } from "../../types";
 import { storeToken } from "../../shared/StorageProvider";
+import SimpleLoader from "../../shared/SimpleLoader";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -38,23 +39,28 @@ const Login: React.FC = () => {
         return <Redirect to="/dashboard" />;
     }
 
+    if (loading) {
+        return <SimpleLoader message="Logging you in..." />;
+    }
+
     return (
-        <Form loading={loading} onSubmit={onSubmit}>
+        <>
             <Header as="h1" textAlign="center" size="huge" image={<Image src={pot} size="small" />} content="Cookoff Pro" />
+            <Form onSubmit={onSubmit}>
+                <Form.Input
+                    placeholder="Username"
+                    icon="user"
+                    iconPosition="left"
+                    value={username}
+                    fluid
+                    onChange={(e, { value }) => setUsername(value)}
+                />
 
-            <Form.Input
-                placeholder="Username"
-                icon="user"
-                iconPosition="left"
-                value={username}
-                fluid
-                onChange={(e, { value }) => setUsername(value)}
-            />
+                <Form.Button color="blue" icon="sign in" type="submit" fluid disabled={!username} content="Login" />
 
-            <Form.Button color="blue" icon="sign in" type="submit" fluid disabled={!username} content="Login" />
-
-            {error && <Message negative icon="exclamation triangle" content="An error occurred. Check your username and try again" />}
-        </Form>
+                {error && <Message negative icon="exclamation triangle" content="An error occurred. Check your username and try again" />}
+            </Form>
+        </>
     );
 };
 

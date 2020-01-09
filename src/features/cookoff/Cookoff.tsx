@@ -11,6 +11,8 @@ import CookoffComments from "./CookoffComments";
 import { EntryUserScore, Comment, CookoffResult } from "./types";
 import { useContext } from "react";
 import AuthContext from "../../shared/AuthContext";
+import moment from "moment";
+import Countdown from "../../shared/Countdown";
 
 interface CookoffProps extends RouteComponentProps<{ id: string }> {}
 
@@ -66,7 +68,15 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
         return <SimpleLoader message="Loading cookoff data..." />;
     }
 
-    const { AreScoresReleased } = cookoff;
+    const { AreScoresReleased, EventStartDate, EventEndDate } = cookoff;
+    const startDate = moment(EventStartDate.replace("Z", ""));
+    const endDate = moment(EventEndDate.replace("Z", ""));
+
+    const eventDayString = startDate.format("dddd, MMMM Do YYYY");
+    const eventStartTimeString = startDate.format("h:mm A");
+    const eventEndTimeString = endDate.format("h:mm A");
+
+    const hasCookoffEnded = moment(new Date()).isAfter(endDate);
 
     const panes = [
         {
@@ -124,7 +134,13 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 setResults
             }}
         >
-            <Header icon="spoon" size="huge" content={cookoff.Title} color="grey" />
+            <Header
+                icon="spoon"
+                size="huge"
+                content={cookoff.Title}
+                color="grey"
+                subheader={`${eventDayString} from ${eventStartTimeString} to ${eventEndTimeString}`}
+            />
             {user!.IsAdmin && (
                 <Button
                     fluid
@@ -136,6 +152,8 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                     style={{ marginBottom: "1rem" }}
                 />
             )}
+
+            {!hasCookoffEnded && <Countdown date={endDate.toDate()} />}
 
             <Tab panes={panes} renderActiveOnly={false} menu={{ secondary: true, pointing: true }} />
         </CookoffContext.Provider>

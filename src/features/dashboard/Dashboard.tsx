@@ -10,6 +10,7 @@ import SimpleLoader from "../../shared/SimpleLoader";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { uniqBy, orderBy } from "lodash";
+import Countdown from "../../shared/Countdown";
 
 const Dashboard: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -78,8 +79,11 @@ const Dashboard: React.FC = () => {
                     const endDate = moment(EventEndDate.replace("Z", ""));
 
                     const eventDayString = startDate.format("dddd, MMMM Do YYYY");
-                    const eventStartTimeString = startDate.format("h A");
-                    const eventEndTimeString = endDate.format("h A");
+                    const eventStartTimeString = startDate.format("h:mm A");
+                    const eventEndTimeString = endDate.format("h:mm A");
+
+                    const hasCookoffEnded = moment(new Date()).isAfter(endDate);
+
                     return (
                         <Card fluid color="grey" as={Link} to={`/cookoff/${CookoffID}`} key={CookoffID}>
                             <Card.Content>
@@ -87,6 +91,11 @@ const Dashboard: React.FC = () => {
                                 <Card.Description content={eventDayString} />
                                 <Card.Meta content={`${eventStartTimeString} to ${eventEndTimeString}`} />
                             </Card.Content>
+                            {!hasCookoffEnded && (
+                                <Card.Content>
+                                    <Countdown date={endDate.toDate()} />
+                                </Card.Content>
+                            )}
                         </Card>
                     );
                 })}

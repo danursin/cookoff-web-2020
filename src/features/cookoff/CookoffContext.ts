@@ -13,6 +13,7 @@ interface CookoffContextProps {
     setComments: (comments: Comment[]) => void;
     results?: CookoffResult[];
     setResults: (results: CookoffResult[]) => void;
+    hasCookoffEnded: boolean;
 }
 
 export default createContext<CookoffContextProps>({
@@ -30,5 +31,6 @@ export default createContext<CookoffContextProps>({
     },
     setResults: () => {
         throw new Error("not implemented");
-    }
+    },
+    hasCookoffEnded: false
 });

@@ -131,7 +131,8 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 comments,
                 setComments,
                 results,
-                setResults
+                setResults,
+                hasCookoffEnded
             }}
         >
             <Header

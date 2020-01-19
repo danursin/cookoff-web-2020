@@ -4,16 +4,18 @@ import CookoffContext from "./CookoffContext";
 import SimpleLoader from "../../shared/SimpleLoader";
 import { Accordion, AccordionPanelProps, Label, Header, Image } from "semantic-ui-react";
 import { SemanticShorthandItem } from "semantic-ui-react/dist/commonjs/generic";
-import config from "../../config";
 import { useEffect } from "react";
 import { sproc } from "../../services/DataService";
 import { EntryUserScore } from "./types";
 import AuthContext from "../../shared/AuthContext";
 import { CookoffEntry } from "../../types";
+import CookoffScoreReadonly from "./CookoffScoreReadonly";
+import CookoffScoreEditable from "./CookoffScoreEditable";
+import config from "../../config";
 
 const CookoffScores = () => {
     const { user } = useContext(AuthContext);
-    const { cookoff, userScores, setUserScores, entries } = useContext(CookoffContext);
+    const { cookoff, userScores, setUserScores, entries, hasCookoffEnded } = useContext(CookoffContext);
 
     useEffect(() => {
         if (userScores) {
@@ -35,10 +37,10 @@ const CookoffScores = () => {
         return <SimpleLoader message="Loading scores..." />;
     }
 
-    const panels: SemanticShorthandItem<AccordionPanelProps>[] = userScores.map(us => {
-        const entry: CookoffEntry = entries.find(e => e.CookoffEntryID === us.CookoffEntryID)!;
+    const panels: SemanticShorthandItem<AccordionPanelProps>[] = userScores.map(userScore => {
+        const entry: CookoffEntry = entries.find(e => e.CookoffEntryID === userScore.CookoffEntryID)!;
         return {
-            key: us.CookoffEntryID,
+            key: userScore.CookoffEntryID,
             title: {
                 content: (
                     <>
@@ -47,7 +49,7 @@ const CookoffScores = () => {
                             size="small"
                             floated="right"
                             color="grey"
-                            content={us.Score === null || us.Score === undefined ? "?" : us.Score}
+                            content={userScore.Score === null || userScore.Score === undefined ? "?" : userScore.Score}
                         />
                     </>
                 )
@@ -56,8 +58,11 @@ const CookoffScores = () => {
                 content: (
                     <>
                         {!!entry.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
-                        <Header content={us.Comment} color="grey" />
-                        <Header content={`Score: ${us.Score || "?"}`} size="small" color="grey" />
+                        {hasCookoffEnded ? (
+                            <CookoffScoreReadonly userScore={userScore} />
+                        ) : (
+                            <CookoffScoreEditable entry={entry} userScore={userScore} />
+                        )}
                     </>
                 )
             }

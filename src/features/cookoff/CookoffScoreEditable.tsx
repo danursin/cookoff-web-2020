@@ -1,14 +1,18 @@
-import React, { useState } from "react";
-import { Form, DropdownItemProps, Icon } from "semantic-ui-react";
+import React, { useState, useCallback } from "react";
+import { Form, DropdownItemProps, Icon, TextAreaProps } from "semantic-ui-react";
 import { CookoffEntry } from "../../types";
 import { EntryUserScore } from "./types";
+import { debounce } from "lodash";
+import { update, insert } from "../../services/DataService";
 
 interface CookoffScoreEditableProps {
     entry: CookoffEntry;
     userScore: EntryUserScore;
+    onSaveScore: (userScore: EntryUserScore) => void;
 }
 
 const scoreOptions: DropdownItemProps[] = [
+    { key: 0, value: undefined, text: "Unscored", icon: <Icon name="question" color="grey" /> },
     { key: 1, value: 1, text: "1 - Ouch", icon: <Icon name="frown" color="red" /> },
     { key: 2, value: 2, text: "2 - Not Good", icon: <Icon name="frown" color="orange" /> },
     { key: 3, value: 3, text: "3 - Meh", icon: <Icon name="meh" color="yellow" /> },
@@ -17,33 +21,111 @@ const scoreOptions: DropdownItemProps[] = [
 ];
 
 const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: CookoffScoreEditableProps) => {
-    const { userScore: us } = props;
+    const { userScore: us, onSaveScore } = props;
 
     const [localComment, setLocalComment] = useState<string | null>(us.Comment);
     const [localScore, setLocalScore] = useState<number | null>(us.Score);
+    const [savingScore, setSavingScore] = useState<boolean>(false);
+    const [savingComment, setSavingComment] = useState<boolean>(false);
 
-    const onSubmit = () => {};
+    const debouncedTextUpdate = useCallback(
+        debounce(async (comment: string | null) => {
+            setSavingComment(true);
+            const { CookoffEntryScoreID, CookoffEntryID, CookoffParticipantID } = us;
+            if (CookoffEntryScoreID) {
+                await update({
+                    table: "CookoffEntryScore",
+                    values: {
+                        Comment: comment
+                    },
+                    where: {
+                        CookoffEntryScoreID
+                    }
+                });
+            } else {
+                const { CookoffEntryScoreID } = await insert({
+                    table: "CookoffEntryScore",
+                    values: {
+                        CookoffEntryID,
+                        CookoffParticipantID,
+                        Comment: comment
+                    }
+                });
+                us.CookoffEntryScoreID = CookoffEntryScoreID;
+            }
+            us.Comment = comment;
+            setSavingComment(false);
+            onSaveScore(us);
+        }, 500),
+        []
+    );
+
+    const handleScoreChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const score = +e.currentTarget.value || null;
+        setLocalScore(score);
+        setSavingScore(true);
+        const { CookoffEntryScoreID, CookoffEntryID, CookoffParticipantID } = us;
+        if (CookoffEntryScoreID) {
+            await update({
+                table: "CookoffEntryScore",
+                values: {
+                    Score: score
+                },
+                where: {
+                    CookoffEntryScoreID
+                }
+            });
+        } else {
+            const { CookoffEntryScoreID } = await insert({
+                table: "CookoffEntryScore",
+                values: {
+                    CookoffEntryID,
+                    CookoffParticipantID,
+                    Score: score
+                }
+            });
+            us.CookoffEntryScoreID = CookoffEntryScoreID;
+        }
+        us.Score = score;
+        setSavingScore(false);
+        onSaveScore(us);
+    };
+
+    const handleCommentChange = (e: React.FormEvent<HTMLTextAreaElement>, data: TextAreaProps) => {
+        const comment = (data.value as string) || null;
+        setLocalComment(comment);
+        debouncedTextUpdate(comment);
+    };
+
+    const selectedOption = scoreOptions.find(o => o.value === localScore) || scoreOptions[0];
+
     return (
-        <Form onSubmit={onSubmit}>
-            <Form.Dropdown
-                label="Score"
-                selection
-                fluid
-                placeholder="As yet unscored"
-                value={localScore || undefined}
-                options={scoreOptions}
-                onChange={(e, { value }) => {
-                    debugger;
-                    setLocalScore((value as number) || null);
-                }}
-            />
+        <Form>
+            <div className="field">
+                <label>Score {savingScore ? <Icon name="spoon" loading color="grey" /> : selectedOption.icon}</label>
+                <select className="ui fluid selection dropdown" value={localScore || undefined} onChange={handleScoreChange}>
+                    {scoreOptions.map(({ key, value, text }) => (
+                        <option key={key} value={value as number}>
+                            {text}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <Form.TextArea
                 value={localComment || ""}
                 rows={2}
-                fluid
                 placeholder="Notes"
-                label="Notes"
-                onChange={(e, { value }) => setLocalComment((value as string) || null)}
+                label={
+                    savingComment ? (
+                        <label>
+                            Notes <Icon name="spoon" loading color="grey" />
+                        </label>
+                    ) : (
+                        "Notes"
+                    )
+                }
+                onChange={handleCommentChange}
             />
         </Form>
     );

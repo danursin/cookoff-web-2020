@@ -98,7 +98,7 @@ const CookoffForm: React.FC = () => {
 
             <Grid columns="equal">
                 <Grid.Column>
-                    <Button content="Cancel" type="button" icon="times" color="grey" fluid onClick={goBack} />
+                    <Button content="Go Back" type="button" icon="arrow left" color="grey" fluid onClick={goBack} />
                 </Grid.Column>
                 <Grid.Column>
                     <Button content="Save" type="submit" icon="save" color="blue" fluid />

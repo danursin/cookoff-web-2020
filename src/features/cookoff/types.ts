@@ -1,8 +1,9 @@
 export interface EntryUserScore {
     CookoffEntryID: number;
+    CookoffParticipantID: number;
     CookoffEntryScoreID: number;
-    Score: number;
-    Comment: string;
+    Score: number | null;
+    Comment: string | null;
 }
 
 export interface Comment {

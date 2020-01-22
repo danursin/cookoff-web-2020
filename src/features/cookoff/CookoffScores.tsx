@@ -44,7 +44,7 @@ const CookoffScores = () => {
             title: {
                 content: (
                     <>
-                        <Label content={entry.Title} color="grey" />
+                        <Label content={entry.Title} color={!!userScore.Score ? "green" : "grey"} />
                         <Header
                             size="small"
                             floated="right"
@@ -61,7 +61,15 @@ const CookoffScores = () => {
                         {hasCookoffEnded ? (
                             <CookoffScoreReadonly userScore={userScore} />
                         ) : (
-                            <CookoffScoreEditable entry={entry} userScore={userScore} />
+                            <CookoffScoreEditable
+                                entry={entry}
+                                userScore={userScore}
+                                onSaveScore={us => {
+                                    const indexOfScore = userScores.indexOf(us);
+                                    userScores[indexOfScore] = us;
+                                    setUserScores([...userScores]);
+                                }}
+                            />
                         )}
                     </>
                 )

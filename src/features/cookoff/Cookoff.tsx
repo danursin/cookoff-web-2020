@@ -24,7 +24,19 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const [userScores, setUserScores] = useState<EntryUserScore[]>();
     const [comments, setComments] = useState<Comment[]>();
     const [results, setResults] = useState<CookoffResult[]>();
+    const [hasCookoffEnded, setHasCookoffEnded] = useState<boolean>(true);
     const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!cookoff) {
+                return;
+            }
+            const { EventEndDate } = cookoff;
+            setHasCookoffEnded(moment(new Date()).isAfter(moment(EventEndDate.replace("Z", ""))));
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [cookoff]);
 
     useEffect(() => {
         (async () => {
@@ -75,8 +87,6 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const eventDayString = startDate.format("dddd, MMMM Do YYYY");
     const eventStartTimeString = startDate.format("h:mm A");
     const eventEndTimeString = endDate.format("h:mm A");
-
-    const hasCookoffEnded = moment(new Date()).isAfter(endDate);
 
     const panes = [
         {

@@ -44,7 +44,7 @@ const CookoffScores = () => {
             title: {
                 content: (
                     <>
-                        <Label content={entry.Title} color={!!userScore.Score ? "green" : "grey"} />
+                        <Label content={entry.Title} color={!userScore.Score || hasCookoffEnded ? "grey" : "green"} />
                         <Header
                             size="small"
                             floated="right"

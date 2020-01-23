@@ -4,6 +4,7 @@ import { CookoffEntry } from "../../types";
 import { EntryUserScore } from "./types";
 import { debounce } from "lodash";
 import { update, insert } from "../../services/DataService";
+import { SemanticSIZES } from "semantic-ui-react/dist/commonjs/generic";
 
 interface CookoffScoreEditableProps {
     entry: CookoffEntry;
@@ -11,13 +12,14 @@ interface CookoffScoreEditableProps {
     onSaveScore: (userScore: EntryUserScore) => void;
 }
 
+const iconSize: SemanticSIZES = "large";
 const scoreOptions: DropdownItemProps[] = [
-    { key: 0, value: undefined, text: "Unscored", icon: <Icon name="question" color="grey" /> },
-    { key: 1, value: 1, text: "1 - Ouch", icon: <Icon name="frown" color="red" /> },
-    { key: 2, value: 2, text: "2 - Not Good", icon: <Icon name="frown" color="orange" /> },
-    { key: 3, value: 3, text: "3 - Meh", icon: <Icon name="meh" color="yellow" /> },
-    { key: 4, value: 4, text: "4 - Good", icon: <Icon name="smile" color="olive" /> },
-    { key: 5, value: 5, text: "5 - Excellent", icon: <Icon name="smile" color="green" /> }
+    { key: 0, value: undefined, text: "Unscored", icon: <Icon name="question" color="grey" size={iconSize} /> },
+    { key: 1, value: 1, text: "1 - Ouch", icon: <Icon name="frown" color="red" size={iconSize} /> },
+    { key: 2, value: 2, text: "2 - Not Good", icon: <Icon name="frown" color="orange" size={iconSize} /> },
+    { key: 3, value: 3, text: "3 - Meh", icon: <Icon name="meh" color="yellow" size={iconSize} /> },
+    { key: 4, value: 4, text: "4 - Good", icon: <Icon name="smile" color="olive" size={iconSize} /> },
+    { key: 5, value: 5, text: "5 - Excellent", icon: <Icon name="smile" color="green" size={iconSize} /> }
 ];
 
 const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: CookoffScoreEditableProps) => {
@@ -56,7 +58,7 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
             us.Comment = comment;
             setSavingComment(false);
             onSaveScore(us);
-        }, 500),
+        }, 750),
         []
     );
 
@@ -102,7 +104,7 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
     return (
         <Form>
             <div className="field">
-                <label>Score {savingScore ? <Icon name="spoon" loading color="grey" /> : selectedOption.icon}</label>
+                <label>Score {savingScore ? <Icon name="spoon" loading color="grey" size={iconSize} /> : selectedOption.icon}</label>
                 <select className="ui fluid selection dropdown" value={localScore || undefined} onChange={handleScoreChange}>
                     {scoreOptions.map(({ key, value, text }) => (
                         <option key={key} value={value as number}>
@@ -119,7 +121,7 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
                 label={
                     savingComment ? (
                         <label>
-                            Notes <Icon name="spoon" loading color="grey" />
+                            Notes <Icon name="spoon" loading color="grey" size={iconSize} />
                         </label>
                     ) : (
                         "Notes"

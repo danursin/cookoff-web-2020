@@ -21,5 +21,11 @@ export interface CookoffResult {
     Maximum: number;
     Minimum: number;
     StandardDeviation: number;
+    Count_1: number;
+    Count_2: number;
+    Count_3: number;
+    Count_4: number;
+    Count_5: number;
     Rank: number;
+    [key: string]: any;
 }

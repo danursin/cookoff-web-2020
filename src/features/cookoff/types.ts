@@ -29,3 +29,13 @@ export interface CookoffResult {
     Rank: number;
     [key: string]: any;
 }
+
+export interface ParticipantTrend {
+    ParticipantID: number;
+    ParticipantName: string;
+    Average: number;
+    Maximum: number;
+    Minimum: number;
+    StandardDeviation: number;
+    Rank: number;
+}

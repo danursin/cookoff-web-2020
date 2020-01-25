@@ -8,7 +8,7 @@ import { Header, Tab, Button } from "semantic-ui-react";
 import CookoffScores from "./CookoffScores";
 import CookoffResults from "./CookoffResults";
 import CookoffComments from "./CookoffComments";
-import { EntryUserScore, Comment, CookoffResult } from "./types";
+import { EntryUserScore, Comment, CookoffResult, ParticipantTrend } from "./types";
 import { useContext } from "react";
 import AuthContext from "../../shared/AuthContext";
 import moment from "moment";
@@ -25,6 +25,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const [comments, setComments] = useState<Comment[]>();
     const [results, setResults] = useState<CookoffResult[]>();
     const [hasCookoffEnded, setHasCookoffEnded] = useState<boolean>(true);
+    const [participantTrends, setParticipantTrends] = useState<ParticipantTrend[]>();
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
@@ -96,10 +97,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 color: "grey",
                 key: "scores"
             },
-            pane: {
-                key: "scores",
-                content: <CookoffScores />
-            }
+            render: () => <CookoffScores />
         },
         {
             menuItem: {
@@ -109,10 +107,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 key: "results",
                 disabled: !AreScoresReleased
             },
-            pane: {
-                key: "results",
-                content: <CookoffResults />
-            }
+            render: () => <CookoffResults />
         },
         {
             menuItem: {
@@ -122,10 +117,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 key: "comments",
                 disabled: !AreScoresReleased
             },
-            pane: {
-                key: "comments",
-                content: <CookoffComments />
-            }
+            render: () => <CookoffComments />
         }
     ];
 
@@ -142,7 +134,9 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 setComments,
                 results,
                 setResults,
-                hasCookoffEnded
+                hasCookoffEnded,
+                participantTrends,
+                setParticipantTrends
             }}
         >
             <Header
@@ -166,7 +160,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
 
             {!hasCookoffEnded && <Countdown date={endDate.toDate()} />}
 
-            <Tab panes={panes} renderActiveOnly={false} menu={{ secondary: true, pointing: true }} />
+            <Tab panes={panes} menu={{ secondary: true, pointing: true }} />
         </CookoffContext.Provider>
     );
 };

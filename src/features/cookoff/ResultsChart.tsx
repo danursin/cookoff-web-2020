@@ -4,7 +4,7 @@ import CookoffContext from "./CookoffContext";
 import SimpleLoader from "../../shared/SimpleLoader";
 import Highcharts, { SeriesColumnOptions } from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { Header } from "semantic-ui-react";
+import { Header, Divider } from "semantic-ui-react";
 
 const colorMap: { [key: number]: string } = {
     1: "red",
@@ -87,6 +87,7 @@ const ResultsChart: React.FC = () => {
 
     return (
         <>
+            <Divider />
             <Header content="Score Distribution by Entry" color="grey" icon="bar chart" />
             <HighchartsReact highcharts={Highcharts} options={chartConfig} />
         </>

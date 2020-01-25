@@ -4,6 +4,7 @@ import SimpleLoader from "../../shared/SimpleLoader";
 import { Header, Message, Icon } from "semantic-ui-react";
 import ResultsTable from "./ResultsTable";
 import ResultsChart from "./ResultsChart";
+import ParticipantTrendsTable from "./ParticipantTrendsTable";
 
 const fivePointCookoffCutoff = 7;
 
@@ -31,6 +32,8 @@ const CookoffResults = () => {
             <ResultsTable />
 
             {cookoff!.CookoffID! > fivePointCookoffCutoff && <ResultsChart />}
+
+            <ParticipantTrendsTable />
         </>
     );
 };

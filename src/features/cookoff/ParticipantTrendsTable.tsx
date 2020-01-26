@@ -39,7 +39,12 @@ const ParticipantTrendsTable: React.FC = () => {
     return (
         <div style={{ overflowY: "auto" }}>
             <Divider />
-            <Header content="Participant Voting Trends" color="grey" icon="users" />
+            <Header
+                content="Participant Voting Trends"
+                subheader="Must have scored half of the entries to be included"
+                color="grey"
+                icon="users"
+            />
             <Grid columns="equal" verticalAlign="middle">
                 <Grid.Column>
                     <Header size="small" content={`${highestScorer} likes chili the most`} icon="smile" color="green" />

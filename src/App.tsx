@@ -16,6 +16,7 @@ const App: React.FC = () => {
     const logout = () => {
         clearToken();
         setUser(undefined);
+        setUserCookoffs(undefined);
     };
 
     if (!user) {

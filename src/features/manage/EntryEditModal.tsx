@@ -5,6 +5,8 @@ import { update, insert, uploadFile } from "../../services/DataService";
 import { Entry } from "./types";
 import config from "../../config";
 import ManageContext from "./ManageContext";
+import ReactCrop, { Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 interface EntryEditModalProps {
     open: boolean;
@@ -19,6 +21,14 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>();
     const [dataUri, setDataUri] = useState<string>();
+    const [croppedImageUri, setCroppedImageUri] = useState<string>();
+    const [crop, setCrop] = useState<Crop>({
+        x: 0,
+        y: 0,
+        width: 683,
+        height: 512,
+        aspect: 4 / 3
+    });
 
     const { participants } = useContext(ManageContext);
 
@@ -26,6 +36,30 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
         setLocalEntry({ ...entry });
         setError(undefined);
     }, [entry]);
+
+    const onImageLoaded = (image: HTMLImageElement) => {
+        const canvas = document.createElement("canvas");
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = crop.width!;
+        canvas.height = crop.height!;
+        const ctx = canvas.getContext("2d")!;
+
+        ctx.drawImage(
+            image,
+            crop.x! * scaleX,
+            crop.y! * scaleY,
+            crop.width! * scaleX,
+            crop.height! * scaleY,
+            0,
+            0,
+            crop.width!,
+            crop.height!
+        );
+
+        const base64Image = canvas.toDataURL("image/png", 0.75);
+        setCroppedImageUri(base64Image);
+    };
 
     const onImageChange = async (event: React.FormEvent<HTMLInputElement>) => {
         const files = event.currentTarget.files;
@@ -60,8 +94,8 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
             CookoffParticipantID
         };
 
-        if (dataUri) {
-            const filename = await uploadFile(dataUri);
+        if (croppedImageUri) {
+            const filename = await uploadFile(croppedImageUri);
             values.Filename = filename;
             localEntry.Filename = filename;
         }
@@ -126,11 +160,10 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
 
                     <Form.Input placeholder="Entry Image" fluid maxLength="1" type="file" label="Entry Image" onChange={onImageChange} />
 
-                    {(!!srcUrl || !!dataUri) && (
-                        <Image src={dataUri || srcUrl} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />
-                    )}
+                    {!!srcUrl && !dataUri && <Image src={srcUrl} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />}
+                    {!!dataUri && <ReactCrop src={dataUri} crop={crop} onChange={setCrop} onImageLoaded={onImageLoaded} />}
 
-                    <Form.Button fluid color="blue" content="Save" icon="save" type="submit" />
+                    <Form.Button fluid color="blue" content="Save" icon="save" type="submit" disabled={!!dataUri && !croppedImageUri} />
                 </Form>
             </Modal.Content>
         </Modal>

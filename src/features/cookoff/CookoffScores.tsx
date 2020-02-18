@@ -57,7 +57,7 @@ const CookoffScores = () => {
             content: {
                 content: (
                     <>
-                        {!!entry.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
+                        {!!entry.Filename && <Image fluid centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
                         {hasCookoffEnded ? (
                             <CookoffScoreReadonly userScore={userScore} />
                         ) : (

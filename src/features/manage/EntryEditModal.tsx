@@ -37,7 +37,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
         setError(undefined);
     }, [entry]);
 
-    const onImageLoaded = (image: HTMLImageElement) => {
+    const onCroppedImageLoaded = (image: HTMLImageElement) => {
         const canvas = document.createElement("canvas");
         const scaleX = image.naturalWidth / image.width;
         const scaleY = image.naturalHeight / image.height;
@@ -45,6 +45,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
         canvas.height = crop.height!;
         const ctx = canvas.getContext("2d")!;
 
+        ctx.clearRect(0, 0, crop.width!, crop.height!);
         ctx.drawImage(
             image,
             crop.x! * scaleX,
@@ -161,7 +162,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                     <Form.Input placeholder="Entry Image" fluid maxLength="1" type="file" label="Entry Image" onChange={onImageChange} />
 
                     {!!srcUrl && !dataUri && <Image src={srcUrl} centered style={{ marginTop: "2rem", marginBottom: "2rem" }} />}
-                    {!!dataUri && <ReactCrop src={dataUri} crop={crop} onChange={setCrop} onImageLoaded={onImageLoaded} />}
+                    {!!dataUri && <ReactCrop src={dataUri} crop={crop} onChange={setCrop} onImageLoaded={onCroppedImageLoaded} />}
 
                     <Form.Button fluid color="blue" content="Save" icon="save" type="submit" disabled={!!dataUri && !croppedImageUri} />
                 </Form>

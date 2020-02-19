@@ -33,13 +33,16 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
         const cropWidth = 680;
         const cropHeight = 512;
 
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+
         const canvas = document.createElement("canvas");
         canvas.width = cropWidth;
         canvas.height = cropHeight;
 
         const ctx = canvas.getContext("2d")!;
 
-        ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, cropWidth, cropHeight);
+        ctx.drawImage(image, 0, 0, image.width * scaleX, image.height * scaleY, 0, 0, cropWidth, cropHeight);
 
         const base64Image = canvas.toDataURL("image/png");
         return base64Image;

@@ -149,7 +149,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                         <img
                             alt="entry"
                             src={dataUri || srcUrl || ""}
-                            style={{ margin: "2rem auto", display: "block" }}
+                            style={{ margin: "2rem auto", display: "block", width: "100%" }}
                             ref={ref => (imageRef = ref)}
                         />
                     )}

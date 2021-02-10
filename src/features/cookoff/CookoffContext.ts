@@ -1,6 +1,7 @@
+import { Comment, CookoffResult, EntryUserScore, ParticipantTrend } from "./types";
 import { Cookoff, CookoffEntry } from "../../types";
+
 import { createContext } from "react";
-import { EntryUserScore, Comment, CookoffResult, ParticipantTrend } from "./types";
 
 interface CookoffContextProps {
     cookoff?: Cookoff;

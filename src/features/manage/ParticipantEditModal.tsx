@@ -1,8 +1,9 @@
-import React, { useState, FormEvent } from "react";
+import { Form, Message, Modal } from "semantic-ui-react";
+import React, { FormEvent, useState } from "react";
+import { insert, update } from "../../services/DataService";
+
 import { Participant } from "../../types";
-import { Modal, Form, Message } from "semantic-ui-react";
 import { useEffect } from "react";
-import { update, insert } from "../../services/DataService";
 
 interface ParticipantEditModalProps {
     open: boolean;
@@ -42,14 +43,14 @@ const ParticipantEditModal: React.FC<ParticipantEditModalProps> = (props: Partic
                     }
                 });
             } else {
-                const { ParticipantID } = await insert({
+                const { ParticipantID } = (await insert({
                     table: "Participant",
                     values: {
                         Name: Name || null,
                         Username: Username || null,
                         IsAdmin: !!IsAdmin
                     }
-                });
+                })) as { ParticipantID: number };
                 localParticipant.ParticipantID = ParticipantID;
             }
             onSaveComplete(localParticipant);

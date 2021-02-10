@@ -1,6 +1,6 @@
-import React from "react";
-import { Header } from "semantic-ui-react";
 import { EntryUserScore } from "./types";
+import { Header } from "semantic-ui-react";
+import React from "react";
 
 interface CookoffScoreReadonlyProps {
     userScore: EntryUserScore;

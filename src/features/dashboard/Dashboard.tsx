@@ -1,21 +1,26 @@
+import { Button, Card, Header } from "semantic-ui-react";
+import { Cookoff, CookoffParticipant } from "../../types";
 import React, { useState } from "react";
-import { Header, Card, Button } from "semantic-ui-react";
-import { useContext } from "react";
+import { orderBy, uniqBy } from "lodash";
+
 import AppContext from "../../shared/AppContext";
-import { useEffect } from "react";
-import { query } from "../../services/DataService";
 import AuthContext from "../../shared/AuthContext";
-import { CookoffParticipant, Cookoff } from "../../types";
+import Countdown from "../../shared/Countdown";
+import { Link } from "react-router-dom";
 import SimpleLoader from "../../shared/SimpleLoader";
 import moment from "moment";
-import { Link } from "react-router-dom";
-import { uniqBy, orderBy } from "lodash";
-import Countdown from "../../shared/Countdown";
+import { query } from "../../services/DataService";
+import { useContext } from "react";
+import { useEffect } from "react";
 
 const Dashboard: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const { userCookoffs, setUserCookoffs } = useContext(AppContext);
     const { user } = useContext(AuthContext);
+
+    if (!user) {
+        throw new Error("User not defined in protected route");
+    }
 
     useEffect(() => {
         if (userCookoffs) {
@@ -30,21 +35,21 @@ const Dashboard: React.FC = () => {
                     table: "CookoffParticipant",
                     relations: ["Cookoff"],
                     where: {
-                        ParticipantID: user!.ParticipantID
+                        ParticipantID: user.ParticipantID
                     }
                 }),
-                user!.IsAdmin
+                user.IsAdmin
                     ? query<Cookoff>({
                           table: "Cookoff",
                           where: {
-                              HostParticipantID: user!.ParticipantID
+                              HostParticipantID: user.ParticipantID
                           }
                       })
                     : undefined
             ]);
 
             const cookoffs: Cookoff[] = orderBy(
-                uniqBy([...userCookoffResult.map(c => c.Cookoff!), ...(userHostedCookoffResult || [])], "CookoffID"),
+                uniqBy([...userCookoffResult.map((c) => c.Cookoff as Cookoff), ...(userHostedCookoffResult || [])], "CookoffID"),
                 ["CookoffID"],
                 ["desc"]
             );
@@ -61,7 +66,7 @@ const Dashboard: React.FC = () => {
     return (
         <>
             <Header icon="spoon" content="Your Cookoffs" color="grey" size="huge" />
-            {user!.IsAdmin && (
+            {user.IsAdmin && (
                 <Button
                     icon="plus circle"
                     color="blue"
@@ -73,7 +78,7 @@ const Dashboard: React.FC = () => {
                 />
             )}
             <Card.Group>
-                {userCookoffs.map(c => {
+                {userCookoffs.map((c) => {
                     const { CookoffID, Title, EventStartDate, EventEndDate } = c;
                     const startDate = moment(EventStartDate.replace("Z", ""));
                     const endDate = moment(EventEndDate.replace("Z", ""));

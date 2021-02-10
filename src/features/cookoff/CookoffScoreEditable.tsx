@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from "react";
-import { Form, DropdownItemProps, Icon, TextAreaProps } from "semantic-ui-react";
+import { DropdownItemProps, Form, Icon, TextAreaProps } from "semantic-ui-react";
+import React, { useCallback, useState } from "react";
+import { insert, update } from "../../services/DataService";
+
 import { CookoffEntry } from "../../types";
 import { EntryUserScore } from "./types";
-import { debounce } from "lodash";
-import { update, insert } from "../../services/DataService";
 import { SemanticSIZES } from "semantic-ui-react/dist/commonjs/generic";
+import { debounce } from "lodash";
 
 interface CookoffScoreEditableProps {
     entry: CookoffEntry;
@@ -45,14 +46,14 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
                     }
                 });
             } else {
-                const { CookoffEntryScoreID } = await insert({
+                const { CookoffEntryScoreID } = (await insert({
                     table: "CookoffEntryScore",
                     values: {
                         CookoffEntryID,
                         CookoffParticipantID,
                         Comment: comment
                     }
-                });
+                })) as { CookoffEntryScoreID: number };
                 us.CookoffEntryScoreID = CookoffEntryScoreID;
             }
             us.Comment = comment;
@@ -78,14 +79,14 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
                 }
             });
         } else {
-            const { CookoffEntryScoreID } = await insert({
+            const { CookoffEntryScoreID } = (await insert({
                 table: "CookoffEntryScore",
                 values: {
                     CookoffEntryID,
                     CookoffParticipantID,
                     Score: score
                 }
-            });
+            })) as { CookoffEntryScoreID: number };
             us.CookoffEntryScoreID = CookoffEntryScoreID;
         }
         us.Score = score;
@@ -99,7 +100,7 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
         debouncedTextUpdate(comment);
     };
 
-    const selectedOption = scoreOptions.find(o => o.value === localScore) || scoreOptions[0];
+    const selectedOption = scoreOptions.find((o) => o.value === localScore) || scoreOptions[0];
 
     return (
         <Form>

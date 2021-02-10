@@ -1,11 +1,12 @@
+import { Divider, Grid, Header, Icon, Popup, Table } from "semantic-ui-react";
 import React, { CSSProperties, useContext } from "react";
-import { Table, Popup, Icon, Header, Grid, Divider } from "semantic-ui-react";
-import { orderBy, first, last } from "lodash";
+import { first, last, orderBy } from "lodash";
+
 import CookoffContext from "./CookoffContext";
-import { useEffect } from "react";
-import { sproc } from "../../services/DataService";
 import { ParticipantTrend } from "./types";
 import SimpleLoader from "../../shared/SimpleLoader";
+import { sproc } from "../../services/DataService";
+import { useEffect } from "react";
 
 const ParticipantTrendsTable: React.FC = () => {
     const { participantTrends, setParticipantTrends, cookoff } = useContext(CookoffContext);
@@ -18,7 +19,7 @@ const ParticipantTrendsTable: React.FC = () => {
             const data = await sproc<ParticipantTrend>({
                 objectName: "GetCookoffParticipantTrends",
                 parameters: {
-                    CookoffID: cookoff!.CookoffID!
+                    CookoffID: cookoff?.CookoffID as number
                 }
             });
             setParticipantTrends(data);
@@ -33,8 +34,8 @@ const ParticipantTrendsTable: React.FC = () => {
     const mostControversial = first(sortByStandardDeviation);
     const mostAgreement = last(sortByStandardDeviation);
 
-    const { ParticipantName: highestScorer } = first(participantTrends)!;
-    const { ParticipantName: lowestScorer } = last(participantTrends)!;
+    const { ParticipantName: highestScorer } = participantTrends[0];
+    const { ParticipantName: lowestScorer } = participantTrends[participantTrends.length - 1];
 
     return (
         <div style={{ overflowY: "auto" }}>
@@ -65,7 +66,7 @@ const ParticipantTrendsTable: React.FC = () => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {participantTrends.map(r => {
+                    {participantTrends.map((r) => {
                         const { ParticipantName, Average, Minimum, Maximum, StandardDeviation, Rank } = r;
                         const isMostAggreement = r === mostAgreement;
                         const isMostControversial = !isMostAggreement && r === mostControversial;

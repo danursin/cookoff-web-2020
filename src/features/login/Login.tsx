@@ -1,16 +1,17 @@
-import React from "react";
-import { useState } from "react";
-import Axios from "axios";
 import { Form, Header, Image, Message } from "semantic-ui-react";
-import pot from "../../img/pot.png";
-import config from "../../config";
-import { useContext } from "react";
+
 import AuthContext from "../../shared/AuthContext";
-import { Redirect } from "react-router";
-import decode from "jwt-decode";
+import Axios from "axios";
 import { Participant } from "../../types";
-import { storeToken } from "../../shared/StorageProvider";
+import React from "react";
+import { Redirect } from "react-router";
 import SimpleLoader from "../../shared/SimpleLoader";
+import config from "../../config";
+import decode from "jwt-decode";
+import pot from "../../img/pot.png";
+import { storeToken } from "../../shared/StorageProvider";
+import { useContext } from "react";
+import { useState } from "react";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);

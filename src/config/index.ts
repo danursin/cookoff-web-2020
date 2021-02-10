@@ -3,7 +3,7 @@ const config: {
     cookoffApiUrl: string;
 } = {
     accessTokenName: "cookoff_access_token",
-    cookoffApiUrl: "https://cookoff-2020-api.herokuapp.com"
+    cookoffApiUrl: "http://localhost:2500"
 };
 
 export default config;

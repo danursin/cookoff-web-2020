@@ -1,6 +1,7 @@
+import { Entry, ManagedParticipant } from "./types";
+
 import { Cookoff } from "../../types";
 import { createContext } from "react";
-import { ManagedParticipant, Entry } from "./types";
 
 interface ManageContextProps {
     cookoff?: Cookoff;

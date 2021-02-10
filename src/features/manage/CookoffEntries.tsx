@@ -1,13 +1,15 @@
-import React, { useState } from "react";
-import { useContext } from "react";
-import ManageContext from "./ManageContext";
-import { useEffect } from "react";
-import SimpleLoader from "../../shared/SimpleLoader";
-import { sproc } from "../../services/DataService";
+import { Button, Header, Table } from "semantic-ui-react";
 import { Entry, ManagedParticipant } from "./types";
-import { Table, Button, Header } from "semantic-ui-react";
+import React, { useState } from "react";
+
 import EntryEditModal from "./EntryEditModal";
+import ManageContext from "./ManageContext";
+import { Participant } from "../../types";
+import SimpleLoader from "../../shared/SimpleLoader";
 import { sortBy } from "lodash";
+import { sproc } from "../../services/DataService";
+import { useContext } from "react";
+import { useEffect } from "react";
 
 const defaultEntry: Entry = {
     Title: ""
@@ -29,7 +31,7 @@ const CookoffEntries: React.FC = () => {
                 sproc<Entry>({
                     objectName: "GetCookoffEntries",
                     parameters: {
-                        CookoffID: cookoff!.CookoffID!
+                        CookoffID: cookoff?.CookoffID as number
                     }
                 }),
                 participants
@@ -37,7 +39,7 @@ const CookoffEntries: React.FC = () => {
                     : sproc<ManagedParticipant>({
                           objectName: "GetCookoffParticipants",
                           parameters: {
-                              CookoffID: cookoff!.CookoffID!
+                              CookoffID: cookoff?.CookoffID as number
                           }
                       })
             ];
@@ -56,7 +58,7 @@ const CookoffEntries: React.FC = () => {
     }
 
     const onSaveComplete = (entry: Entry) => {
-        const existingEntry = entries.find(p => p.CookoffEntryID === entry.CookoffEntryID);
+        const existingEntry = entries.find((p) => p.CookoffEntryID === entry.CookoffEntryID);
         if (existingEntry) {
             Object.assign(existingEntry, entry);
         } else {
@@ -86,9 +88,9 @@ const CookoffEntries: React.FC = () => {
                             <Table.Cell colSpan={3} content="No entries registered yet..." warning />
                         </Table.Row>
                     )}
-                    {entries.map(e => {
+                    {entries.map((e) => {
                         const { CookoffEntryID, Title, CookoffParticipantID } = e;
-                        const { Name, Username } = participants.find(p => p.CookoffParticipantID === CookoffParticipantID)!;
+                        const { Name, Username } = participants.find((p) => p.CookoffParticipantID === CookoffParticipantID) as Participant;
                         return (
                             <Table.Row key={CookoffEntryID}>
                                 <Table.Cell>
@@ -114,6 +116,7 @@ const CookoffEntries: React.FC = () => {
                                         size="small"
                                         onClick={() => {
                                             if (window.confirm("Are you sure?")) {
+                                                // todo implement
                                             }
                                         }}
                                     />

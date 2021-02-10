@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { SemanticCOLORS, SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
+
 import { Label } from "semantic-ui-react";
 import { useEffect } from "react";
-import { SemanticCOLORS, SemanticICONS } from "semantic-ui-react/dist/commonjs/generic";
 
 interface CountdownProps {
     date: Date;

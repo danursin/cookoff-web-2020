@@ -1,19 +1,20 @@
+import { Entry, ManagedParticipant } from "./types";
 import React, { useState } from "react";
-import { Tab } from "semantic-ui-react";
+
+import AuthContext from "../../shared/AuthContext";
+import { Cookoff } from "../../types";
+import CookoffEntries from "./CookoffEntries";
 import CookoffForm from "./CookoffForm";
 import CookoffParticipants from "./CookoffParticipants";
-import CookoffEntries from "./CookoffEntries";
-import { Cookoff } from "../../types";
 import ManageContext from "./ManageContext";
-import { useContext } from "react";
-import AuthContext from "../../shared/AuthContext";
 import { RouteComponentProps } from "react-router-dom";
-import { useEffect } from "react";
 import SimpleLoader from "../../shared/SimpleLoader";
+import { Tab } from "semantic-ui-react";
 import { query } from "../../services/DataService";
-import { ManagedParticipant, Entry } from "./types";
+import { useContext } from "react";
+import { useEffect } from "react";
 
-interface ManageProps extends RouteComponentProps<{ id: string }> {}
+type ManageProps = RouteComponentProps<{ id: string }>;
 
 const Manage: React.FC<ManageProps> = (props: ManageProps) => {
     const { id } = props.match.params;
@@ -25,7 +26,7 @@ const Manage: React.FC<ManageProps> = (props: ManageProps) => {
         Title: "",
         EventStartDate: "",
         EventEndDate: "",
-        HostParticipantID: user!.ParticipantID!,
+        HostParticipantID: user?.ParticipantID as number,
         AreScoresReleased: false
     };
 

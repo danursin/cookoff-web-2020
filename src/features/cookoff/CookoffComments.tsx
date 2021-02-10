@@ -1,16 +1,16 @@
-import React from "react";
-import { useContext } from "react";
-import CookoffContext from "./CookoffContext";
-import { useEffect } from "react";
-import { sproc } from "../../services/DataService";
-import { Comment } from "./types";
-import SimpleLoader from "../../shared/SimpleLoader";
-import { Card, Label, List, Image, Icon } from "semantic-ui-react";
-import config from "../../config";
-import { CookoffEntry } from "../../types";
-import { CSSProperties } from "react";
+import { Card, Icon, Image, Label, List, Message } from "semantic-ui-react";
 
-const CookoffComments = () => {
+import { CSSProperties } from "react";
+import { Comment } from "./types";
+import CookoffContext from "./CookoffContext";
+import React from "react";
+import SimpleLoader from "../../shared/SimpleLoader";
+import config from "../../config";
+import { sproc } from "../../services/DataService";
+import { useContext } from "react";
+import { useEffect } from "react";
+
+const CookoffComments: React.FC = () => {
     const { cookoff, entries, comments, setComments, results } = useContext(CookoffContext);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const CookoffComments = () => {
         (async () => {
             const data = await sproc<Comment>({
                 objectName: "GetCookoffComments",
-                parameters: { CookoffID: cookoff!.CookoffID! }
+                parameters: { CookoffID: cookoff?.CookoffID as number }
             });
             setComments(data);
         })();
@@ -51,9 +51,12 @@ const CookoffComments = () => {
 
     return (
         <>
-            {results.map(r => {
-                const e: CookoffEntry = entries.find(ce => ce.CookoffEntryID === r.CookoffEntryID)!;
-                const entryComments = comments.filter(c => c.CookoffEntryID === e.CookoffEntryID);
+            {results.map((r) => {
+                const e = entries.find((ce) => ce.CookoffEntryID === r.CookoffEntryID);
+                if (!e) {
+                    return <Message content={`Couldn't find entry with id ${r.CookoffEntryID}`} error icon="exclamation triangle" />;
+                }
+                const entryComments = comments.filter((c) => c.CookoffEntryID === e.CookoffEntryID);
                 return (
                     <Card key={e.CookoffEntryID} fluid>
                         <Card.Content>
@@ -77,7 +80,7 @@ const CookoffComments = () => {
                         <Card.Content textAlign="center">
                             {!!e.Filename && <Image centered src={`${config.cookoffApiUrl}/file?key=${e.Filename}`} />}
                             <List divided verticalAlign="middle">
-                                {entryComments.map(comment => {
+                                {entryComments.map((comment) => {
                                     return (
                                         <List.Item
                                             key={comment.CookoffEntryScoreID}

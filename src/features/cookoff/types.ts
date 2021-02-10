@@ -27,7 +27,7 @@ export interface CookoffResult {
     Count_4: number;
     Count_5: number;
     Rank: number;
-    [key: string]: any;
+    [key: string]: string | number;
 }
 
 export interface ParticipantTrend {

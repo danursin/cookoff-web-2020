@@ -1,10 +1,11 @@
-import React from "react";
-import { useContext } from "react";
-import CookoffContext from "./CookoffContext";
-import SimpleLoader from "../../shared/SimpleLoader";
+import { Divider, Header } from "semantic-ui-react";
 import Highcharts, { SeriesColumnOptions } from "highcharts";
+
+import CookoffContext from "./CookoffContext";
 import HighchartsReact from "highcharts-react-official";
-import { Header, Divider } from "semantic-ui-react";
+import React from "react";
+import SimpleLoader from "../../shared/SimpleLoader";
+import { useContext } from "react";
 
 const colorMap: { [key: number]: string } = {
     1: "red",
@@ -29,12 +30,12 @@ const ResultsChart: React.FC = () => {
         return <SimpleLoader message="Loading score results" />;
     }
 
-    const categories = results!.map(r => r.Title);
-    const series: SeriesColumnOptions[] = [5, 4, 3, 2, 1].map(score => {
+    const categories = results.map((r) => r.Title);
+    const series: SeriesColumnOptions[] = [5, 4, 3, 2, 1].map((score) => {
         return {
             name: `Score ${score}`,
             type: "column",
-            data: results.map(s => s["Count_" + score]),
+            data: results.map((s) => s["Count_" + score]),
             color: colorMap[score]
         };
     });
@@ -64,11 +65,18 @@ const ResultsChart: React.FC = () => {
             }
         },
         tooltip: {
-            formatter: function() {
+            formatter: function () {
+                if (!this.percentage || !results) {
+                    return;
+                }
+
                 const title = (this.x as unknown) as string;
                 const count = this.y;
-                const percentage = this.percentage!.toFixed(0);
-                const entry = results!.find(r => r.Title === title)!;
+                const percentage = this.percentage.toFixed(0);
+                const entry = results.find((r) => r.Title === title);
+                if (!entry) {
+                    return;
+                }
                 return `
                         <b>Entry ${title} - ${entry.ParticipantName}</b><br/>
                         <b>Votes: </b> ${count} <br/>

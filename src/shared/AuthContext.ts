@@ -1,5 +1,5 @@
-import { createContext } from "react";
 import { Participant } from "../types";
+import { createContext } from "react";
 
 interface AuthContextProps {
     user?: Participant;

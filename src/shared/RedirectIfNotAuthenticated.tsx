@@ -1,6 +1,7 @@
-import React, { useContext, ReactElement } from "react";
-import { Redirect } from "react-router-dom";
+import React, { ReactElement, useContext } from "react";
+
 import AuthContext from "./AuthContext";
+import { Redirect } from "react-router-dom";
 
 interface RedirectIfNotAuthenticatedProps {
     children: ReactElement;
@@ -11,7 +12,7 @@ const RedirectIfNotAuthenticated: React.FC<RedirectIfNotAuthenticatedProps> = (p
     const { user, logout } = useContext(AuthContext);
     const currentTime = Math.floor(Date.now() / 1000);
 
-    if (user && currentTime < user.exp!) {
+    if (user && user.exp && currentTime < user.exp) {
         return children;
     }
 

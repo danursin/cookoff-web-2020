@@ -1,13 +1,20 @@
+import { Header, Icon, Popup, Table } from "semantic-ui-react";
 import React, { CSSProperties, useContext } from "react";
-import { Table, Popup, Icon, Header } from "semantic-ui-react";
-import { orderBy, first, last } from "lodash";
+import { first, last, orderBy } from "lodash";
+
 import CookoffContext from "./CookoffContext";
+import SimpleLoader from "../../shared/SimpleLoader";
 
 const ResultsTable: React.FC = () => {
     const { results } = useContext(CookoffContext);
     const sortByStandardDeviation = orderBy(results, ["StandardDeviation"], ["desc"]);
     const mostControversial = first(sortByStandardDeviation);
     const mostAgreement = last(sortByStandardDeviation);
+
+    if (!results) {
+        return <SimpleLoader />;
+    }
+
     return (
         <div style={{ overflowY: "auto" }}>
             <Header content="Entry Statistics" color="grey" icon="calculator" />
@@ -24,7 +31,7 @@ const ResultsTable: React.FC = () => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {results!.map(r => {
+                    {results.map((r) => {
                         const { Rank, Title, ParticipantName, Average, Minimum, Maximum, StandardDeviation } = r;
                         const positive = r === mostAgreement;
                         const negative = !positive && r === mostControversial;

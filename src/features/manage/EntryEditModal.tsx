@@ -1,10 +1,11 @@
-import React, { useState, FormEvent, useContext } from "react";
-import { Modal, Form, Message, DropdownItemProps } from "semantic-ui-react";
-import { useEffect } from "react";
-import { update, insert, uploadFile } from "../../services/DataService";
+import { DropdownItemProps, Form, Message, Modal } from "semantic-ui-react";
+import React, { FormEvent, useContext, useState } from "react";
+import { insert, update, uploadFile } from "../../services/DataService";
+
 import { Entry } from "./types";
-import config from "../../config";
 import ManageContext from "./ManageContext";
+import config from "../../config";
+import { useEffect } from "react";
 
 interface EntryEditModalProps {
     open: boolean;
@@ -40,7 +41,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
         canvas.width = cropWidth;
         canvas.height = cropHeight;
 
-        const ctx = canvas.getContext("2d")!;
+        const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
 
         ctx.drawImage(image, 0, 0, image.width * scaleX, image.height * scaleY, 0, 0, cropWidth, cropHeight);
 
@@ -55,7 +56,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
             return;
         }
         const file = files[0];
-        const url = await new Promise<string>(resolve => {
+        const url = await new Promise<string>((resolve) => {
             const reader = new FileReader();
             reader.addEventListener(
                 "load",
@@ -76,9 +77,10 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
 
         const { Title, CookoffParticipantID } = localEntry;
 
-        const values: any = {
+        const values = {
             Title: Title || null,
-            CookoffParticipantID
+            CookoffParticipantID,
+            Filename: ""
         };
 
         if (imageRef) {
@@ -98,10 +100,10 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                     }
                 });
             } else {
-                const { CookoffEntryID } = await insert({
+                const { CookoffEntryID } = (await insert({
                     table: "CookoffEntry",
                     values
-                });
+                })) as { CookoffEntryID: number };
                 localEntry.CookoffEntryID = CookoffEntryID;
             }
             onSaveComplete(localEntry);
@@ -112,9 +114,14 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
             setLoading(false);
         }
     };
-    const options: DropdownItemProps[] = participants!
-        .filter(p => p.IsParticipant)
-        .map(p => ({
+
+    if (!participants) {
+        throw new Error("Participants missing when it shouldn't be");
+    }
+
+    const options: DropdownItemProps[] = participants
+        .filter((p) => p.IsParticipant)
+        .map((p) => ({
             key: p.CookoffParticipantID,
             value: p.CookoffParticipantID,
             text: `${p.Name} (${p.Username})`
@@ -153,7 +160,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
                             alt="entry"
                             src={dataUri || srcUrl || ""}
                             style={{ margin: "2rem auto", display: "block", width: "100%" }}
-                            ref={ref => (imageRef = ref)}
+                            ref={(ref) => (imageRef = ref)}
                         />
                     )}
 

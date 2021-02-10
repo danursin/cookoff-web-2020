@@ -1,14 +1,16 @@
-import React, { useState } from "react";
 import "semantic-ui-css/semantic.min.css";
-import { BrowserRouter as Router } from "react-router-dom";
-import { Participant, Cookoff } from "./types";
+
+import { Cookoff, Participant } from "./types";
+import React, { useState } from "react";
 import { clearToken, getToken } from "./shared/StorageProvider";
-import decode from "jwt-decode";
+
+import AppContext from "./shared/AppContext";
+import AppRoutes from "./AppRoutes";
 import AuthContext from "./shared/AuthContext";
 import { Grid } from "semantic-ui-react";
-import AppRoutes from "./AppRoutes";
 import Navbar from "./shared/Navbar";
-import AppContext from "./shared/AppContext";
+import { BrowserRouter as Router } from "react-router-dom";
+import decode from "jwt-decode";
 
 const App: React.FC = () => {
     const [user, setUser] = useState<Participant>();

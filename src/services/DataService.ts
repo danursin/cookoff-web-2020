@@ -8,32 +8,32 @@ const _axios = axios.create({
     baseURL: cookoffApiUrl
 });
 
-_axios.interceptors.request.use(config => {
+_axios.interceptors.request.use((config) => {
     config.headers = { ...config.headers, [accessTokenName]: getToken() };
     return config;
 });
 
-export const destroy = async (request: DestroyRequest): Promise<any> => {
+export const destroy = async (request: DestroyRequest): Promise<unknown> => {
     const { data } = await _axios.post("/destroy", request);
     return data;
 };
 
-export const insert = async (request: InsertRequest): Promise<any> => {
+export const insert = async (request: InsertRequest): Promise<unknown> => {
     const { data } = await _axios.post("/insert", request);
     return data;
 };
 
-export const query = async <T = any>(request: QueryRequest): Promise<T[]> => {
+export const query = async <T = unknown>(request: QueryRequest): Promise<T[]> => {
     const { data } = await _axios.post<T[]>("/query", request);
     return data;
 };
 
-export const update = async (request: UpdateRequest): Promise<any> => {
+export const update = async (request: UpdateRequest): Promise<unknown> => {
     const { data } = await _axios.post("/update", request);
     return data;
 };
 
-export const sproc = async <T = any>(request: SprocRequest): Promise<T[]> => {
+export const sproc = async <T = unknown>(request: SprocRequest): Promise<T[]> => {
     const { data } = await _axios.post("/sproc", request);
     return data;
 };
@@ -48,17 +48,17 @@ export const uploadFile = async (data_uri: string): Promise<string> => {
 
 export interface DestroyRequest {
     table: string;
-    where: number[] | { [key: string]: any };
+    where: number[] | { [key: string]: unknown };
 }
 
 export interface InsertRequest {
     table: string;
-    values: { [key: string]: any } | { [key: string]: any }[];
+    values: { [key: string]: unknown } | { [key: string]: unknown }[];
 }
 
 export interface QueryRequest {
     table: string;
-    where?: { [key: string]: any };
+    where?: { [key: string]: unknown };
     skip?: number;
     take?: number;
     select?: string[];
@@ -70,8 +70,8 @@ export interface QueryRequest {
 
 export interface UpdateRequest {
     table: string;
-    where: { [key: string]: any };
-    values: { [key: string]: any };
+    where: { [key: string]: unknown };
+    values: { [key: string]: unknown };
 }
 
 export interface SprocRequest {

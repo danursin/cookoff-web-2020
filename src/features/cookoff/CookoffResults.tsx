@@ -1,18 +1,23 @@
+import { Header, Icon, Message } from "semantic-ui-react";
 import React, { useContext } from "react";
+
 import CookoffContext from "./CookoffContext";
-import SimpleLoader from "../../shared/SimpleLoader";
-import { Header, Message, Icon } from "semantic-ui-react";
-import ResultsTable from "./ResultsTable";
-import ResultsChart from "./ResultsChart";
 import ParticipantTrendsTable from "./ParticipantTrendsTable";
+import ResultsChart from "./ResultsChart";
+import ResultsTable from "./ResultsTable";
+import SimpleLoader from "../../shared/SimpleLoader";
 
 const fivePointCookoffCutoff = 7;
 
-const CookoffResults = () => {
+const CookoffResults: React.FC = () => {
     const { results, cookoff } = useContext(CookoffContext);
 
     if (!results) {
         return <SimpleLoader message="Loading results.." />;
+    }
+
+    if (!cookoff?.CookoffID) {
+        return <Message error content="Somehow results are tying to be displayed but there is no cookoff available" />;
     }
 
     const [winner] = results;
@@ -31,7 +36,7 @@ const CookoffResults = () => {
 
             <ResultsTable />
 
-            {cookoff!.CookoffID! > fivePointCookoffCutoff && <ResultsChart />}
+            {cookoff.CookoffID > fivePointCookoffCutoff && <ResultsChart />}
 
             <ParticipantTrendsTable />
         </>

@@ -1,10 +1,11 @@
+import { Dimmer, Header, Icon } from "semantic-ui-react";
+
 import React from "react";
-import { Dimmer, Icon, Header } from "semantic-ui-react";
 
 interface SimpleLoaderProps {
     message?: string;
 }
-const SimpleLoader = (props: SimpleLoaderProps) => {
+const SimpleLoader: React.FC<SimpleLoaderProps> = (props: SimpleLoaderProps) => {
     const { message } = props;
     return (
         <Dimmer active inverted inline="centered">

@@ -1,19 +1,19 @@
-import React from "react";
-import { useContext } from "react";
-import CookoffContext from "./CookoffContext";
-import SimpleLoader from "../../shared/SimpleLoader";
-import { Accordion, AccordionPanelProps, Label, Header, Image } from "semantic-ui-react";
-import { SemanticShorthandItem } from "semantic-ui-react/dist/commonjs/generic";
-import { useEffect } from "react";
-import { sproc } from "../../services/DataService";
-import { EntryUserScore } from "./types";
-import AuthContext from "../../shared/AuthContext";
-import { CookoffEntry } from "../../types";
-import CookoffScoreReadonly from "./CookoffScoreReadonly";
-import CookoffScoreEditable from "./CookoffScoreEditable";
-import config from "../../config";
+import { Accordion, AccordionPanelProps, Header, Image, Label, Message } from "semantic-ui-react";
 
-const CookoffScores = () => {
+import AuthContext from "../../shared/AuthContext";
+import CookoffContext from "./CookoffContext";
+import CookoffScoreEditable from "./CookoffScoreEditable";
+import CookoffScoreReadonly from "./CookoffScoreReadonly";
+import { EntryUserScore } from "./types";
+import React from "react";
+import { SemanticShorthandItem } from "semantic-ui-react/dist/commonjs/generic";
+import SimpleLoader from "../../shared/SimpleLoader";
+import config from "../../config";
+import { sproc } from "../../services/DataService";
+import { useContext } from "react";
+import { useEffect } from "react";
+
+const CookoffScores: React.FC = () => {
     const { user } = useContext(AuthContext);
     const { cookoff, userScores, setUserScores, entries, hasCookoffEnded } = useContext(CookoffContext);
 
@@ -25,8 +25,8 @@ const CookoffScores = () => {
             const result = await sproc<EntryUserScore>({
                 objectName: "GetCookoffParticipantScores",
                 parameters: {
-                    CookoffID: cookoff!.CookoffID!,
-                    ParticipantID: user!.ParticipantID!
+                    CookoffID: cookoff?.CookoffID as number,
+                    ParticipantID: user?.ParticipantID as number
                 }
             });
             setUserScores(result);
@@ -37,8 +37,11 @@ const CookoffScores = () => {
         return <SimpleLoader message="Loading scores..." />;
     }
 
-    const panels: SemanticShorthandItem<AccordionPanelProps>[] = userScores.map(userScore => {
-        const entry: CookoffEntry = entries.find(e => e.CookoffEntryID === userScore.CookoffEntryID)!;
+    const panels: SemanticShorthandItem<AccordionPanelProps>[] = userScores.map((userScore) => {
+        const entry = entries.find((e) => e.CookoffEntryID === userScore.CookoffEntryID);
+        if (!entry) {
+            return <Message content={`Couldn't find entry with id ${userScore.CookoffEntryID}`} error icon="exclamation triangle" />;
+        }
         return {
             key: userScore.CookoffEntryID,
             title: {
@@ -64,7 +67,7 @@ const CookoffScores = () => {
                             <CookoffScoreEditable
                                 entry={entry}
                                 userScore={userScore}
-                                onSaveScore={us => {
+                                onSaveScore={(us) => {
                                     const indexOfScore = userScores.indexOf(us);
                                     userScores[indexOfScore] = us;
                                     setUserScores([...userScores]);

@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { Button, Header, Tab } from "semantic-ui-react";
+import { Comment, CookoffResult, EntryUserScore, ParticipantTrend } from "./types";
 import { Cookoff, CookoffEntry } from "../../types";
-import CookoffContext from "./CookoffContext";
+import { Link, RouteComponentProps } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { query, sproc } from "../../services/DataService";
-import SimpleLoader from "../../shared/SimpleLoader";
-import { Header, Tab, Button } from "semantic-ui-react";
-import CookoffScores from "./CookoffScores";
-import CookoffResults from "./CookoffResults";
-import CookoffComments from "./CookoffComments";
-import { EntryUserScore, Comment, CookoffResult, ParticipantTrend } from "./types";
-import { useContext } from "react";
-import AuthContext from "../../shared/AuthContext";
-import moment from "moment";
-import Countdown from "../../shared/Countdown";
 
-interface CookoffProps extends RouteComponentProps<{ id: string }> {}
+import AuthContext from "../../shared/AuthContext";
+import CookoffComments from "./CookoffComments";
+import CookoffContext from "./CookoffContext";
+import CookoffResults from "./CookoffResults";
+import CookoffScores from "./CookoffScores";
+import Countdown from "../../shared/Countdown";
+import SimpleLoader from "../../shared/SimpleLoader";
+import moment from "moment";
+import { useContext } from "react";
+
+type CookoffProps = RouteComponentProps<{ id: string }>;
 
 const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const { id } = props.match.params;
@@ -67,10 +68,10 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
         }
 
         (async () => {
-            const data = await sproc({
+            const data = await sproc<CookoffResult>({
                 objectName: "GetCookoffResults",
                 parameters: {
-                    CookoffID: cookoff.CookoffID!
+                    CookoffID: cookoff.CookoffID as number
                 }
             });
             setResults(data);
@@ -146,14 +147,14 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 color="grey"
                 subheader={`${eventDayString} from ${eventStartTimeString} to ${eventEndTimeString}`}
             />
-            {user!.IsAdmin && (
+            {user?.IsAdmin && (
                 <Button
                     fluid
                     color="blue"
                     icon="cog"
                     content="Manage Cookoff"
                     as={Link}
-                    to={`/manage/${cookoff.CookoffID!}`}
+                    to={`/manage/${cookoff.CookoffID}`}
                     style={{ marginBottom: "1rem" }}
                 />
             )}

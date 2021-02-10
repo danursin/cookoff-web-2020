@@ -1,18 +1,23 @@
+import { Button, Form, Grid } from "semantic-ui-react";
 import React, { useState } from "react";
-import { Form, Grid, Button } from "semantic-ui-react";
-import { useContext } from "react";
+import { insert, update } from "../../services/DataService";
+
 import ManageContext from "./ManageContext";
-import { update, insert } from "../../services/DataService";
 import { Redirect } from "react-router";
+import { useContext } from "react";
 
 const CookoffForm: React.FC = () => {
     const { cookoff, setCookoff } = useContext(ManageContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [redirect, setRedirect] = useState<string>();
 
+    if (!cookoff) {
+        throw new Error("Cookoff undefined in page dedicated to cookoff");
+    }
+
     const goBack = () => {
-        if (cookoff!.CookoffID) {
-            setRedirect(`/cookoff/${cookoff!.CookoffID}`);
+        if (cookoff.CookoffID) {
+            setRedirect(`/cookoff/${cookoff.CookoffID}`);
         } else {
             setRedirect("/dashboard");
         }
@@ -20,9 +25,9 @@ const CookoffForm: React.FC = () => {
 
     const onSubmit = async () => {
         setIsLoading(true);
-        let { Title, EventStartDate, EventEndDate, AreScoresReleased } = cookoff!;
+        const { Title, EventStartDate, EventEndDate, AreScoresReleased } = cookoff;
 
-        if (cookoff!.CookoffID) {
+        if (cookoff.CookoffID) {
             await update({
                 table: "Cookoff",
                 values: {
@@ -32,22 +37,22 @@ const CookoffForm: React.FC = () => {
                     AreScoresReleased
                 },
                 where: {
-                    CookoffID: cookoff!.CookoffID!
+                    CookoffID: cookoff.CookoffID as number
                 }
             });
         } else {
-            const { CookoffID } = await insert({
+            const { CookoffID } = (await insert({
                 table: "Cookoff",
                 values: {
-                    HostParticipantID: cookoff!.HostParticipantID,
+                    HostParticipantID: cookoff.HostParticipantID,
                     Title,
                     EventStartDate,
                     EventEndDate,
                     AreScoresReleased
                 }
-            });
+            })) as { CookoffID: number };
             // get new cookoff ID
-            setCookoff({ ...cookoff!, CookoffID });
+            setCookoff({ ...cookoff, CookoffID });
         }
         setIsLoading(false);
     };
@@ -62,8 +67,8 @@ const CookoffForm: React.FC = () => {
                 label="Cookoff Title"
                 required
                 placeholder="Cookoff Title"
-                value={cookoff!.Title}
-                onChange={(e, data) => setCookoff({ ...cookoff!, Title: data.value as string })}
+                value={cookoff.Title}
+                onChange={(e, data) => setCookoff({ ...cookoff, Title: data.value as string })}
             />
             <Form.Group>
                 <Form.Input
@@ -72,8 +77,8 @@ const CookoffForm: React.FC = () => {
                     label="Event Start Date"
                     placeholder="Event Start Date"
                     type="datetime-local"
-                    value={cookoff!.EventStartDate}
-                    onChange={(e, { value }) => setCookoff({ ...cookoff!, EventStartDate: `${value}:00` as string })}
+                    value={cookoff.EventStartDate}
+                    onChange={(e, { value }) => setCookoff({ ...cookoff, EventStartDate: `${value}:00` as string })}
                 />
                 <Form.Input
                     width="8"
@@ -81,9 +86,9 @@ const CookoffForm: React.FC = () => {
                     label="Event End Date"
                     type="datetime-local"
                     placeholder="Event End Date"
-                    value={cookoff!.EventEndDate}
+                    value={cookoff.EventEndDate}
                     onChange={(e, { value }) => {
-                        setCookoff({ ...cookoff!, EventEndDate: `${value}:00` as string });
+                        setCookoff({ ...cookoff, EventEndDate: `${value}:00` as string });
                     }}
                 />
             </Form.Group>
@@ -92,8 +97,8 @@ const CookoffForm: React.FC = () => {
                 style={{ marginTop: "1rem" }}
                 label="Are Scores Released?"
                 toggle
-                checked={cookoff!.AreScoresReleased}
-                onChange={(e, data) => setCookoff({ ...cookoff!, AreScoresReleased: !!data.checked })}
+                checked={cookoff.AreScoresReleased}
+                onChange={(e, data) => setCookoff({ ...cookoff, AreScoresReleased: !!data.checked })}
             />
 
             <Grid columns="equal">

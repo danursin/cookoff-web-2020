@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
 import { Image, Menu } from "semantic-ui-react";
-import pot from "../img/pot.png";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+
 import AuthContext from "./AuthContext";
+import { Link } from "react-router-dom";
+import pot from "../img/pot.png";
 
 const Navbar: React.FC = () => {
     const { user, logout } = useContext(AuthContext);

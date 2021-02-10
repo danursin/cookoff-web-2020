@@ -1,14 +1,15 @@
+import { Button, Icon, Table } from "semantic-ui-react";
 import React, { useState } from "react";
-import { useContext } from "react";
+import { destroy, insert, sproc } from "../../services/DataService";
+
 import ManageContext from "./ManageContext";
-import SimpleLoader from "../../shared/SimpleLoader";
-import { useEffect } from "react";
-import { sproc, insert, destroy } from "../../services/DataService";
 import { ManagedParticipant } from "./types";
-import { Table, Button, Icon } from "semantic-ui-react";
-import ParticipantEditModal from "./ParticipantEditModal";
 import { Participant } from "../../types";
+import ParticipantEditModal from "./ParticipantEditModal";
+import SimpleLoader from "../../shared/SimpleLoader";
 import { sortBy } from "lodash";
+import { useContext } from "react";
+import { useEffect } from "react";
 
 const defaultParticipant: Participant = {
     Name: "",
@@ -31,7 +32,7 @@ const CookoffParticipants: React.FC = () => {
             const data = await sproc<ManagedParticipant>({
                 objectName: "GetCookoffParticipants",
                 parameters: {
-                    CookoffID: cookoff!.CookoffID!
+                    CookoffID: cookoff?.CookoffID as number
                 }
             });
             setParticipants(data);
@@ -44,22 +45,22 @@ const CookoffParticipants: React.FC = () => {
 
     const addParticipant = async (participantID: number) => {
         setParticipants(
-            participants.map(p => {
+            participants.map((p) => {
                 if (p.ParticipantID === participantID) {
                     p.IsLoading = true;
                 }
                 return p;
             })
         );
-        const { CookoffParticipantID } = await insert({
+        const { CookoffParticipantID } = (await insert({
             table: "CookoffParticipant",
             values: {
-                CookoffID: cookoff!.CookoffID,
+                CookoffID: cookoff?.CookoffID as number,
                 ParticipantID: participantID
             }
-        });
+        })) as { CookoffParticipantID: number };
         setParticipants(
-            participants.map(p => {
+            participants.map((p) => {
                 if (p.ParticipantID === participantID) {
                     p.IsParticipant = true;
                     p.CookoffParticipantID = CookoffParticipantID;
@@ -75,7 +76,7 @@ const CookoffParticipants: React.FC = () => {
             return;
         }
         setParticipants(
-            participants.map(p => {
+            participants.map((p) => {
                 if (p.ParticipantID === participantID) {
                     p.IsLoading = true;
                 }
@@ -85,12 +86,12 @@ const CookoffParticipants: React.FC = () => {
         await destroy({
             table: "CookoffParticipant",
             where: {
-                CookoffID: cookoff!.CookoffID,
+                CookoffID: cookoff?.CookoffID as number,
                 ParticipantID: participantID
             }
         });
         setParticipants(
-            participants.map(p => {
+            participants.map((p) => {
                 if (p.ParticipantID === participantID) {
                     p.IsParticipant = false;
                     p.IsLoading = false;
@@ -101,14 +102,14 @@ const CookoffParticipants: React.FC = () => {
     };
 
     const onSaveComplete = (participant: Participant) => {
-        const existingParticipant = participants.find(p => p.ParticipantID === participant.ParticipantID);
+        const existingParticipant = participants.find((p) => p.ParticipantID === participant.ParticipantID);
         if (existingParticipant) {
             Object.assign(existingParticipant, participant);
         } else {
             const mp: ManagedParticipant = {
                 ...participant,
                 IsParticipant: false,
-                ParticipantID: participant.ParticipantID!
+                ParticipantID: participant.ParticipantID as number
             };
             participants.push(mp);
         }
@@ -136,7 +137,7 @@ const CookoffParticipants: React.FC = () => {
             />
             <Table compact="very" unstackable>
                 <Table.Body>
-                    {participants.map(p => {
+                    {participants.map((p) => {
                         const { Name, Username, ParticipantID, IsParticipant, IsLoading, IsAdmin } = p;
                         return (
                             <Table.Row key={ParticipantID}>

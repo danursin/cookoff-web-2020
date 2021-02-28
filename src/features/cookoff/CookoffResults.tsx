@@ -2,6 +2,7 @@ import { Header, Icon, Message } from "semantic-ui-react";
 import React, { useContext } from "react";
 
 import CookoffContext from "./CookoffContext";
+import CookoffWinnersAndLosers from "./CookoffWinnersAndLosers";
 import ParticipantTrendsTable from "./ParticipantTrendsTable";
 import ResultsChart from "./ResultsChart";
 import ResultsTable from "./ResultsTable";
@@ -27,12 +28,7 @@ const CookoffResults: React.FC = () => {
 
     return (
         <>
-            <Header textAlign="center" size="huge" color="blue" block>
-                <Icon name="trophy" />
-                <Header.Content>
-                    {winner.ParticipantName}'s entry, {winner.Title}, is the winner!
-                </Header.Content>
-            </Header>
+            <CookoffWinnersAndLosers results={results} />
 
             <ResultsTable />
 

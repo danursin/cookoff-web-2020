@@ -1,4 +1,4 @@
-import { Header, Icon, Image } from "semantic-ui-react";
+import { Header, Image } from "semantic-ui-react";
 
 import { CookoffResult } from "./types";
 import React from "react";

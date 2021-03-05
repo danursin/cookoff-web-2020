@@ -38,7 +38,7 @@ const App: React.FC = () => {
                 <AppContext.Provider value={{ userCookoffs, setUserCookoffs }}>
                     <Navbar />
                     <Grid centered padded>
-                        <Grid.Column mobile={16} computer={12}>
+                        <Grid.Column mobile={16} computer={8}>
                             <AppRoutes />
                         </Grid.Column>
                     </Grid>

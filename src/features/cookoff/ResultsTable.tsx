@@ -8,8 +8,8 @@ import SimpleLoader from "../../shared/SimpleLoader";
 const ResultsTable: React.FC = () => {
     const { results } = useContext(CookoffContext);
     const sortByStandardDeviation = orderBy(results, ["StandardDeviation"], ["desc"]);
-    const mostControversial = first(sortByStandardDeviation);
-    const mostAgreement = last(sortByStandardDeviation);
+    const mostControversial = first(sortByStandardDeviation)?.StandardDeviation;
+    const mostAgreement = last(sortByStandardDeviation)?.StandardDeviation;
 
     if (!results) {
         return <SimpleLoader />;
@@ -33,8 +33,8 @@ const ResultsTable: React.FC = () => {
                 <Table.Body>
                     {results.map((r) => {
                         const { Rank, Title, ParticipantName, Average, Minimum, Maximum, StandardDeviation } = r;
-                        const positive = r === mostAgreement;
-                        const negative = !positive && r === mostControversial;
+                        const positive = r.StandardDeviation === mostAgreement;
+                        const negative = !positive && r.StandardDeviation === mostControversial;
                         const style: CSSProperties | undefined = positive || negative ? { fontWeight: "bold" } : undefined;
                         return (
                             <Table.Row key={r.CookoffEntryID} positive={positive} negative={negative} style={style}>

@@ -76,7 +76,7 @@ const CookoffEntries: React.FC = () => {
                 icon="plus circle"
                 content="Add Entry"
                 onClick={() => {
-                    setSelectedEntry(defaultEntry);
+                    setSelectedEntry({ ...defaultEntry });
                     setModalOpen(true);
                 }}
             />

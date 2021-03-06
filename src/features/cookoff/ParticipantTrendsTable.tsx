@@ -31,11 +31,14 @@ const ParticipantTrendsTable: React.FC = () => {
     }
 
     const sortByStandardDeviation = orderBy(participantTrends, ["StandardDeviation"], ["desc"]);
-    const mostControversial = first(sortByStandardDeviation);
-    const mostAgreement = last(sortByStandardDeviation);
+    const mostControversial = first(sortByStandardDeviation)?.StandardDeviation;
+    const mostAgreement = last(sortByStandardDeviation)?.StandardDeviation;
 
-    const { ParticipantName: highestScorer } = participantTrends[0];
-    const { ParticipantName: lowestScorer } = participantTrends[participantTrends.length - 1];
+    const highestScoreAvg = participantTrends[0].Average;
+    const lowestScoreAvg = participantTrends[participantTrends.length - 1].Average;
+
+    const highestScorers = participantTrends.filter((pt) => pt.Average === highestScoreAvg);
+    const lowestScorers = participantTrends.filter((pt) => pt.Average === lowestScoreAvg);
 
     return (
         <div style={{ overflowY: "auto" }}>
@@ -47,12 +50,51 @@ const ParticipantTrendsTable: React.FC = () => {
                 icon="users"
             />
             <Grid columns="equal" verticalAlign="middle">
-                <Grid.Column>
-                    <Header size="small" content={`${highestScorer} likes chili the most`} icon="smile" color="green" />
-                </Grid.Column>
-                <Grid.Column>
-                    <Header size="small" content={`${lowestScorer} does not seem to like chili`} icon="frown" color="red" />
-                </Grid.Column>
+                {highestScoreAvg === lowestScoreAvg && (
+                    <Grid.Column>
+                        <Header size="small" icon="meh" color="orange" content="Turns out no one likes anything" />
+                    </Grid.Column>
+                )}
+                {highestScoreAvg !== lowestScoreAvg && (
+                    <>
+                        <Grid.Column>
+                            {highestScorers.length === 1 && (
+                                <Header
+                                    size="small"
+                                    content={`${highestScorers[0].ParticipantName} likes chili the most`}
+                                    icon="smile"
+                                    color="green"
+                                />
+                            )}
+                            {highestScorers.length > 1 && (
+                                <Header
+                                    size="small"
+                                    content={`${highestScorers.map((s) => s.ParticipantName).join(", ")} really like chili`}
+                                    icon="smile"
+                                    color="green"
+                                />
+                            )}
+                        </Grid.Column>
+                        <Grid.Column>
+                            {lowestScorers.length === 1 && (
+                                <Header
+                                    size="small"
+                                    content={`${lowestScorers[0].ParticipantName} does not seem to like chili`}
+                                    icon="smile"
+                                    color="green"
+                                />
+                            )}
+                            {lowestScorers.length > 1 && (
+                                <Header
+                                    size="small"
+                                    content={`${lowestScorers.map((s) => s.ParticipantName).join(", ")} don't seem to like chili`}
+                                    icon="smile"
+                                    color="green"
+                                />
+                            )}
+                        </Grid.Column>
+                    </>
+                )}
             </Grid>
             <Table compact unstackable>
                 <Table.Header>
@@ -68,8 +110,8 @@ const ParticipantTrendsTable: React.FC = () => {
                 <Table.Body>
                     {participantTrends.map((r) => {
                         const { ParticipantName, Average, Minimum, Maximum, StandardDeviation, Rank } = r;
-                        const isMostAggreement = r === mostAgreement;
-                        const isMostControversial = !isMostAggreement && r === mostControversial;
+                        const isMostAggreement = r.StandardDeviation === mostAgreement;
+                        const isMostControversial = !isMostAggreement && r.StandardDeviation === mostControversial;
                         const accentedStyle: CSSProperties | undefined =
                             isMostAggreement || isMostControversial ? { fontWeight: "bold" } : undefined;
                         return (

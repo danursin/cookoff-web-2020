@@ -55,7 +55,7 @@ const ParticipantEditModal: React.FC<ParticipantEditModalProps> = (props: Partic
             }
             onSaveComplete(localParticipant);
         } catch (err) {
-            setError(err.message);
+            setError((err as Error).message);
             console.log(err);
         } finally {
             setLoading(false);

@@ -1,6 +1,6 @@
 import { Accordion, AccordionPanelProps, Header, Image, Label, Message } from "semantic-ui-react";
 
-import AuthContext from "../../shared/AuthContext";
+import AppContext from "../../shared/AppContextProvider";
 import CookoffContext from "./CookoffContext";
 import CookoffScoreEditable from "./CookoffScoreEditable";
 import CookoffScoreReadonly from "./CookoffScoreReadonly";
@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { useEffect } from "react";
 
 const CookoffScores: React.FC = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(AppContext);
     const { cookoff, userScores, setUserScores, entries, hasCookoffEnded } = useContext(CookoffContext);
 
     useEffect(() => {
@@ -40,7 +40,14 @@ const CookoffScores: React.FC = () => {
     const panels: SemanticShorthandItem<AccordionPanelProps>[] = userScores.map((userScore) => {
         const entry = entries.find((e) => e.CookoffEntryID === userScore.CookoffEntryID);
         if (!entry) {
-            return <Message content={`Couldn't find entry with id ${userScore.CookoffEntryID}`} error icon="exclamation triangle" />;
+            return (
+                <Message
+                    key={userScore.CookoffEntryID}
+                    content={`Couldn't find entry with id ${userScore.CookoffEntryID}`}
+                    error
+                    icon="exclamation triangle"
+                />
+            );
         }
         return {
             key: userScore.CookoffEntryID,

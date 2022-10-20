@@ -3,8 +3,7 @@ import { Cookoff, CookoffParticipant } from "../../types";
 import React, { useState } from "react";
 import { orderBy, uniqBy } from "lodash";
 
-import AppContext from "../../shared/AppContext";
-import AuthContext from "../../shared/AuthContext";
+import AppContext from "../../shared/AppContextProvider";
 import Countdown from "../../shared/Countdown";
 import { Link } from "react-router-dom";
 import SimpleLoader from "../../shared/SimpleLoader";
@@ -16,7 +15,7 @@ import { useEffect } from "react";
 const Dashboard: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const { userCookoffs, setUserCookoffs } = useContext(AppContext);
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(AppContext);
 
     if (!user) {
         throw new Error("User not defined in protected route");

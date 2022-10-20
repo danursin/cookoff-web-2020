@@ -70,7 +70,7 @@ const ResultsChart: React.FC = () => {
                     return;
                 }
 
-                const title = (this.x as unknown) as string;
+                const title = this.x as string;
                 const count = this.y;
                 const percentage = this.percentage.toFixed(0);
                 const entry = results.find((r) => r.Title === title);

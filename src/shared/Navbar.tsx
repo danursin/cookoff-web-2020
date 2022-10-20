@@ -1,12 +1,12 @@
 import { Image, Menu } from "semantic-ui-react";
 import React, { useContext } from "react";
 
-import AuthContext from "./AuthContext";
+import AppContext from "./AppContextProvider";
 import { Link } from "react-router-dom";
 import pot from "../img/pot.png";
 
 const Navbar: React.FC = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { user, logout } = useContext(AppContext);
 
     return (
         <Menu fluid compact tabular>

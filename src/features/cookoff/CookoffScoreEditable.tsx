@@ -105,7 +105,9 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
     return (
         <Form>
             <div className="field">
-                <label>Score {savingScore ? <Icon name="spoon" loading color="grey" size={iconSize} /> : selectedOption.icon}</label>
+                <label>
+                    <>Score {savingScore ? <Icon name="spoon" loading color="grey" size={iconSize} /> : selectedOption.icon}</>
+                </label>
                 <select className="ui fluid selection dropdown" value={localScore || undefined} onChange={handleScoreChange}>
                     {scoreOptions.map(({ key, value, text }) => (
                         <option key={key} value={value as number}>
@@ -121,6 +123,7 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
                 placeholder="Notes"
                 label={
                     savingComment ? (
+                        // eslint-disable-next-line jsx-a11y/label-has-associated-control
                         <label>
                             Notes <Icon name="spoon" loading color="grey" size={iconSize} />
                         </label>

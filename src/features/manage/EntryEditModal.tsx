@@ -108,7 +108,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
             }
             onSaveComplete(localEntry);
         } catch (err) {
-            setError(err.message);
+            setError((err as Error).message);
             console.log(err);
         } finally {
             setLoading(false);

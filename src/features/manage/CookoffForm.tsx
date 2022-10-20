@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { insert, update } from "../../services/DataService";
 
 import ManageContext from "./ManageContext";
-import { Redirect } from "react-router";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CookoffForm: React.FC = () => {
     const { cookoff, setCookoff } = useContext(ManageContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [redirect, setRedirect] = useState<string>();
+    const navigate = useNavigate();
 
     if (!cookoff) {
         throw new Error("Cookoff undefined in page dedicated to cookoff");
@@ -17,9 +17,9 @@ const CookoffForm: React.FC = () => {
 
     const goBack = () => {
         if (cookoff.CookoffID) {
-            setRedirect(`/cookoff/${cookoff.CookoffID}`);
+            navigate(`/cookoff/${cookoff.CookoffID}`);
         } else {
-            setRedirect("/dashboard");
+            navigate("/dashboard");
         }
     };
 
@@ -56,10 +56,6 @@ const CookoffForm: React.FC = () => {
         }
         setIsLoading(false);
     };
-
-    if (redirect) {
-        return <Redirect to={redirect} />;
-    }
 
     return (
         <Form onSubmit={onSubmit} loading={isLoading}>

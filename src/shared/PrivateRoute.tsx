@@ -13,19 +13,13 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = (props) => {
     const { component: Component, ...rest } = props;
 
-    const navigate = useNavigate();
-
     const { user, logout } = useContext(AppContext);
     const currentTime = Math.floor(Date.now() / 1000);
 
     if (user && user.exp && currentTime < user.exp) {
-        // eslint-disable-next-line no-debugger
-        debugger;
         return <Component {...rest} />;
     }
 
-    // eslint-disable-next-line no-debugger
-    debugger;
     logout();
 
     const href = window.location.pathname;

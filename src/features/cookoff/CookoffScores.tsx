@@ -67,9 +67,11 @@ const CookoffScores: React.FC = () => {
             content: {
                 content: (
                     <>
-                        {!!entry.Filename && <Image fluid centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
                         {hasCookoffEnded ? (
-                            <CookoffScoreReadonly userScore={userScore} />
+                            <>
+                                {!!entry.Filename && <Image fluid centered src={`${config.cookoffApiUrl}/file?key=${entry.Filename}`} />}
+                                <CookoffScoreReadonly userScore={userScore} />
+                            </>
                         ) : (
                             <CookoffScoreEditable
                                 entry={entry}

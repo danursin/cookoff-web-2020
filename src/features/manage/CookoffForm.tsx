@@ -25,7 +25,7 @@ const CookoffForm: React.FC = () => {
 
     const onSubmit = async () => {
         setIsLoading(true);
-        const { Title, EventStartDate, EventEndDate, AreScoresReleased } = cookoff;
+        const { Title, EventStartDate, EventEndDate, AreScoresReleased, EventCode } = cookoff;
 
         if (cookoff.CookoffID) {
             await update({
@@ -34,7 +34,8 @@ const CookoffForm: React.FC = () => {
                     Title,
                     EventStartDate,
                     EventEndDate,
-                    AreScoresReleased
+                    AreScoresReleased,
+                    EventCode: EventCode || null
                 },
                 where: {
                     CookoffID: cookoff.CookoffID as number
@@ -48,7 +49,8 @@ const CookoffForm: React.FC = () => {
                     Title,
                     EventStartDate,
                     EventEndDate,
-                    AreScoresReleased
+                    AreScoresReleased,
+                    EventCode: EventCode || null
                 }
             })) as { CookoffID: number };
             // get new cookoff ID
@@ -63,8 +65,14 @@ const CookoffForm: React.FC = () => {
                 label="Cookoff Title"
                 required
                 placeholder="Cookoff Title"
-                value={cookoff.Title}
+                value={cookoff.Title || ""}
                 onChange={(e, data) => setCookoff({ ...cookoff, Title: data.value as string })}
+            />
+            <Form.Input
+                label="Event Code"
+                placeholder="Optional Event Code"
+                value={cookoff.EventCode || ""}
+                onChange={(e, data) => setCookoff({ ...cookoff, EventCode: data.value })}
             />
             <Form.Group>
                 <Form.Input
@@ -73,7 +81,7 @@ const CookoffForm: React.FC = () => {
                     label="Event Start Date"
                     placeholder="Event Start Date"
                     type="datetime-local"
-                    value={cookoff.EventStartDate}
+                    value={cookoff.EventStartDate || ""}
                     onChange={(e, { value }) => setCookoff({ ...cookoff, EventStartDate: `${value}:00` as string })}
                 />
                 <Form.Input
@@ -82,7 +90,7 @@ const CookoffForm: React.FC = () => {
                     label="Event End Date"
                     type="datetime-local"
                     placeholder="Event End Date"
-                    value={cookoff.EventEndDate}
+                    value={cookoff.EventEndDate || ""}
                     onChange={(e, { value }) => {
                         setCookoff({ ...cookoff, EventEndDate: `${value}:00` as string });
                     }}

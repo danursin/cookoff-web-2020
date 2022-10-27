@@ -1,13 +1,14 @@
-import { Form, Grid, Header, Image, Message } from "semantic-ui-react";
+import { Form, Header, Message } from "semantic-ui-react";
 
 import AppContext from "../../shared/AppContextProvider";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 import { Participant } from "../../types";
 import React from "react";
 import SimpleLoader from "../../shared/SimpleLoader";
+import UnauthenticatedLayout from "../../shared/UnauthenticatedLayout";
 import config from "../../config";
 import decode from "jwt-decode";
-import pot from "../../img/pot.png";
 import { storeToken } from "../../shared/StorageProvider";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
@@ -43,27 +44,26 @@ const Login: React.FC = () => {
     }
 
     return (
-        <Grid centered padded>
-            <Grid.Column mobile={16} computer={8}>
-                <Header as="h1" textAlign="center" size="huge" image={<Image src={pot} size="small" />} content="Cookoff Pro" />
-                <Form onSubmit={onSubmit}>
-                    <Form.Input
-                        placeholder="Username"
-                        icon="user"
-                        iconPosition="left"
-                        value={username}
-                        fluid
-                        onChange={(e, { value }) => setUsername(value)}
-                    />
+        <UnauthenticatedLayout>
+            <Header as="h4">
+                Have an event code?
+                <Link to="/register"> Click to register!</Link>
+            </Header>
+            <Form onSubmit={onSubmit}>
+                <Form.Input
+                    placeholder="Username"
+                    icon="user"
+                    iconPosition="left"
+                    value={username}
+                    fluid
+                    onChange={(e, { value }) => setUsername(value)}
+                />
 
-                    <Form.Button color="blue" icon="sign in" type="submit" fluid disabled={!username} content="Login" />
+                <Form.Button color="blue" icon="sign in" type="submit" fluid disabled={!username} content="Login" />
 
-                    {error && (
-                        <Message negative icon="exclamation triangle" content="An error occurred. Check your username and try again" />
-                    )}
-                </Form>
-            </Grid.Column>
-        </Grid>
+                {error && <Message negative icon="exclamation triangle" content="An error occurred. Check your username and try again" />}
+            </Form>
+        </UnauthenticatedLayout>
     );
 };
 

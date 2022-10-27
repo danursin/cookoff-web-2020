@@ -25,7 +25,8 @@ const Manage: React.FC = () => {
         EventStartDate: "",
         EventEndDate: "",
         HostParticipantID: user?.ParticipantID as number,
-        AreScoresReleased: false
+        AreScoresReleased: false,
+        EventCode: ""
     };
 
     const [cookoff, setCookoff] = useState<Cookoff>(defaultCookoff);

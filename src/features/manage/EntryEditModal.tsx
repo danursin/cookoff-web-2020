@@ -8,14 +8,13 @@ import config from "../../config";
 import { useEffect } from "react";
 
 interface EntryEditModalProps {
-    open: boolean;
     entry: Entry;
     onClose: () => void;
     onSaveComplete: (entry: Entry) => void;
 }
 
 const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProps) => {
-    const { onClose, entry, open, onSaveComplete } = props;
+    const { onClose, entry, onSaveComplete } = props;
     const [localEntry, setLocalEntry] = useState<Entry>({ ...entry });
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>();
@@ -129,7 +128,7 @@ const EntryEditModal: React.FC<EntryEditModalProps> = (props: EntryEditModalProp
 
     const srcUrl = localEntry.Filename ? `${config.cookoffApiUrl}/file?key=${localEntry.Filename}` : null;
     return (
-        <Modal onClose={onClose} closeIcon size="small" open={open}>
+        <Modal onClose={onClose} closeIcon size="small" open>
             <Modal.Header content={localEntry.CookoffEntryID ? "Edit Entry" : "Add Entry"} />
             <Modal.Content scrolling>
                 {!!error && <Message error icon="exclamation triangle" content={error} />}

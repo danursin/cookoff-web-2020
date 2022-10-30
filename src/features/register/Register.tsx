@@ -1,6 +1,7 @@
 import { Cookoff, Participant } from "../../types";
 import { Form, Header, Message } from "semantic-ui-react";
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import AppContext from "../../shared/AppContextProvider";
 import UnauthenticatedLayout from "../../shared/UnauthenticatedLayout";
@@ -8,7 +9,6 @@ import axios from "axios";
 import config from "../../config";
 import decode from "jwt-decode";
 import { storeToken } from "../../shared/StorageProvider";
-import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -21,19 +21,33 @@ const Register: React.FC = () => {
     const { setUser } = useContext(AppContext);
 
     const navigate = useNavigate();
+    const [search] = useSearchParams();
+
+    const lookupCode = useCallback(async (code: string) => {
+        try {
+            const url = `${config.cookoffApiUrl}/cookoff/code`;
+            const { data } = await axios.get(url, { params: { code } });
+            setCookoff(data);
+            setPhase("register");
+        } catch (err) {
+            setErrorMessage(`Event Code "${code}" not recognized`);
+        }
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            const code = search.get("code");
+            if (code) {
+                await lookupCode(code);
+            }
+        })();
+    }, [search]);
 
     const handleSubmit = async () => {
         setLoading(true);
         setErrorMessage(undefined);
         if (phase === "code") {
-            try {
-                const url = `${config.cookoffApiUrl}/cookoff/code`;
-                const { data } = await axios.get(url, { params: { code: eventCode } });
-                setCookoff(data);
-                setPhase("register");
-            } catch (err) {
-                setErrorMessage(`Event Code "${eventCode}" not recognized`);
-            }
+            await lookupCode(eventCode);
         } else {
             try {
                 const url = `${config.cookoffApiUrl}/cookoff/register`;

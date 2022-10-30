@@ -18,7 +18,7 @@ const CookoffResults: React.FC = () => {
     }
 
     if (!cookoff?.CookoffID) {
-        return <Message error content="Somehow results are tying to be displayed but there is no cookoff available" />;
+        return <Message error content="Somehow results are trying to be displayed but there is no cookoff available" />;
     }
 
     const [winner] = results;

@@ -1,11 +1,11 @@
 import { Button, Header, Tab } from "semantic-ui-react";
 import { Comment, CookoffResult, EntryUserScore, ParticipantTrend } from "./types";
 import { Cookoff, CookoffEntry } from "../../types";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { query, sproc } from "../../services/DataService";
 
-import AuthContext from "../../shared/AuthContext";
+import AppContext from "../../shared/AppContextProvider";
 import CookoffComments from "./CookoffComments";
 import CookoffContext from "./CookoffContext";
 import CookoffResults from "./CookoffResults";
@@ -15,10 +15,8 @@ import SimpleLoader from "../../shared/SimpleLoader";
 import moment from "moment";
 import { useContext } from "react";
 
-type CookoffProps = RouteComponentProps<{ id: string }>;
-
-const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
-    const { id } = props.match.params;
+const CookoffComponent: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
 
     const [cookoff, setCookoff] = useState<Cookoff>();
     const [entries, setEntries] = useState<CookoffEntry[]>();
@@ -27,7 +25,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
     const [results, setResults] = useState<CookoffResult[]>();
     const [hasCookoffEnded, setHasCookoffEnded] = useState<boolean>(true);
     const [participantTrends, setParticipantTrends] = useState<ParticipantTrend[]>();
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(AppContext);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -52,7 +50,7 @@ const CookoffComponent: React.FC<CookoffProps> = (props: CookoffProps) => {
                 sproc<CookoffEntry>({
                     objectName: "GetCookoffEntries",
                     parameters: {
-                        CookoffID: id
+                        CookoffID: id as string
                     }
                 })
             ]);

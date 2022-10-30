@@ -1,23 +1,25 @@
-import { Form, Header, Image, Message } from "semantic-ui-react";
+import { Form, Header, Message } from "semantic-ui-react";
 
-import AuthContext from "../../shared/AuthContext";
+import AppContext from "../../shared/AppContextProvider";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 import { Participant } from "../../types";
 import React from "react";
-import { Redirect } from "react-router";
 import SimpleLoader from "../../shared/SimpleLoader";
+import UnauthenticatedLayout from "../../shared/UnauthenticatedLayout";
 import config from "../../config";
 import decode from "jwt-decode";
-import pot from "../../img/pot.png";
 import { storeToken } from "../../shared/StorageProvider";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 const Login: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
-    const { user, setUser } = useContext(AuthContext);
+    const { setUser } = useContext(AppContext);
+    const navigate = useNavigate();
 
     const onSubmit = async () => {
         try {
@@ -29,6 +31,7 @@ const Login: React.FC = () => {
             const user: Participant = decode(token);
             setUser(user);
             storeToken(token);
+            navigate("/dashboard");
         } catch (err) {
             console.error(err);
             setError(true);
@@ -36,17 +39,16 @@ const Login: React.FC = () => {
         }
     };
 
-    if (user) {
-        return <Redirect to="/dashboard" />;
-    }
-
     if (loading) {
         return <SimpleLoader message="Logging you in..." />;
     }
 
     return (
-        <>
-            <Header as="h1" textAlign="center" size="huge" image={<Image src={pot} size="small" />} content="Cookoff Pro" />
+        <UnauthenticatedLayout>
+            <Header as="h4">
+                Have an event code?
+                <Link to="/register"> Click to register!</Link>
+            </Header>
             <Form onSubmit={onSubmit}>
                 <Form.Input
                     placeholder="Username"
@@ -61,7 +63,7 @@ const Login: React.FC = () => {
 
                 {error && <Message negative icon="exclamation triangle" content="An error occurred. Check your username and try again" />}
             </Form>
-        </>
+        </UnauthenticatedLayout>
     );
 };
 

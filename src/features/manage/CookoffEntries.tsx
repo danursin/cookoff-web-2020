@@ -80,7 +80,7 @@ const CookoffEntries: React.FC = () => {
                     setModalOpen(true);
                 }}
             />
-            <EntryEditModal open={modalOpen} onClose={() => setModalOpen(false)} entry={selectedEntry} onSaveComplete={onSaveComplete} />
+            {modalOpen && <EntryEditModal onClose={() => setModalOpen(false)} entry={selectedEntry} onSaveComplete={onSaveComplete} />}
             <Table compact="very" unstackable>
                 <Table.Body>
                     {!entries.length && (

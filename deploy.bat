@@ -1,4 +1,4 @@
-set profile=dursin_personal
+set profile=personal
 set bucket=cookoff-web
 set distribution_id=E1DPCWO5TSNTFL
 

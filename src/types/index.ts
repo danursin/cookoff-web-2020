@@ -13,6 +13,7 @@ export interface Cookoff {
     EventEndDate: string;
     HostParticipantID: number;
     AreScoresReleased: boolean;
+    EventCode: string | null;
 }
 
 export interface CookoffParticipant {

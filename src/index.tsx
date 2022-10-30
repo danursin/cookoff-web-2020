@@ -1,5 +1,18 @@
 import App from "./App";
+import { AppContextProvider } from "./shared/AppContextProvider";
+import { BrowserRouter } from "react-router-dom";
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const container = document.getElementById("app");
+const root = createRoot(container as HTMLElement);
+
+root.render(
+    <React.StrictMode>
+        <BrowserRouter>
+            <AppContextProvider>
+                <App />
+            </AppContextProvider>
+        </BrowserRouter>
+    </React.StrictMode>
+);

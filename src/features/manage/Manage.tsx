@@ -1,33 +1,32 @@
 import { Entry, ManagedParticipant } from "./types";
 import React, { useState } from "react";
 
-import AuthContext from "../../shared/AuthContext";
+import AppContext from "../../shared/AppContextProvider";
 import { Cookoff } from "../../types";
 import CookoffEntries from "./CookoffEntries";
 import CookoffForm from "./CookoffForm";
 import CookoffParticipants from "./CookoffParticipants";
 import ManageContext from "./ManageContext";
-import { RouteComponentProps } from "react-router-dom";
 import SimpleLoader from "../../shared/SimpleLoader";
 import { Tab } from "semantic-ui-react";
 import { query } from "../../services/DataService";
 import { useContext } from "react";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-type ManageProps = RouteComponentProps<{ id: string }>;
-
-const Manage: React.FC<ManageProps> = (props: ManageProps) => {
-    const { id } = props.match.params;
-    const parsedID = +id;
+const Manage: React.FC = () => {
+    const { id } = useParams();
+    const parsedID = +(id as string);
     const [loading, setLoading] = useState<boolean>(true);
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(AppContext);
 
     const defaultCookoff: Cookoff = {
         Title: "",
         EventStartDate: "",
         EventEndDate: "",
         HostParticipantID: user?.ParticipantID as number,
-        AreScoresReleased: false
+        AreScoresReleased: false,
+        EventCode: ""
     };
 
     const [cookoff, setCookoff] = useState<Cookoff>(defaultCookoff);

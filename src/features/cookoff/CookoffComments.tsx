@@ -1,8 +1,9 @@
-import { Card, Icon, Image, Label, List, Message } from "semantic-ui-react";
+import { Card, Icon, Image, Label, List } from "semantic-ui-react";
 
 import { CSSProperties } from "react";
 import { Comment } from "./types";
 import CookoffContext from "./CookoffContext";
+import { CookoffEntry } from "../../types";
 import React from "react";
 import SimpleLoader from "../../shared/SimpleLoader";
 import config from "../../config";
@@ -52,10 +53,7 @@ const CookoffComments: React.FC = () => {
     return (
         <>
             {results.map((r) => {
-                const e = entries.find((ce) => ce.CookoffEntryID === r.CookoffEntryID);
-                if (!e) {
-                    return <Message content={`Couldn't find entry with id ${r.CookoffEntryID}`} error icon="exclamation triangle" />;
-                }
+                const e = entries.find((ce) => ce.CookoffEntryID === r.CookoffEntryID) as CookoffEntry;
                 const entryComments = comments.filter((c) => c.CookoffEntryID === e.CookoffEntryID);
                 return (
                     <Card key={e.CookoffEntryID} fluid>

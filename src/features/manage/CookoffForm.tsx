@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { insert, update } from "../../services/DataService";
 
 import ManageContext from "./ManageContext";
-import { Redirect } from "react-router";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CookoffForm: React.FC = () => {
     const { cookoff, setCookoff } = useContext(ManageContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [redirect, setRedirect] = useState<string>();
+    const navigate = useNavigate();
 
     if (!cookoff) {
         throw new Error("Cookoff undefined in page dedicated to cookoff");
@@ -17,15 +17,15 @@ const CookoffForm: React.FC = () => {
 
     const goBack = () => {
         if (cookoff.CookoffID) {
-            setRedirect(`/cookoff/${cookoff.CookoffID}`);
+            navigate(`/cookoff/${cookoff.CookoffID}`);
         } else {
-            setRedirect("/dashboard");
+            navigate("/dashboard");
         }
     };
 
     const onSubmit = async () => {
         setIsLoading(true);
-        const { Title, EventStartDate, EventEndDate, AreScoresReleased } = cookoff;
+        const { Title, EventStartDate, EventEndDate, AreScoresReleased, EventCode } = cookoff;
 
         if (cookoff.CookoffID) {
             await update({
@@ -34,7 +34,8 @@ const CookoffForm: React.FC = () => {
                     Title,
                     EventStartDate,
                     EventEndDate,
-                    AreScoresReleased
+                    AreScoresReleased,
+                    EventCode: EventCode || null
                 },
                 where: {
                     CookoffID: cookoff.CookoffID as number
@@ -48,7 +49,8 @@ const CookoffForm: React.FC = () => {
                     Title,
                     EventStartDate,
                     EventEndDate,
-                    AreScoresReleased
+                    AreScoresReleased,
+                    EventCode: EventCode || null
                 }
             })) as { CookoffID: number };
             // get new cookoff ID
@@ -57,18 +59,20 @@ const CookoffForm: React.FC = () => {
         setIsLoading(false);
     };
 
-    if (redirect) {
-        return <Redirect to={redirect} />;
-    }
-
     return (
         <Form onSubmit={onSubmit} loading={isLoading}>
             <Form.Input
                 label="Cookoff Title"
                 required
                 placeholder="Cookoff Title"
-                value={cookoff.Title}
+                value={cookoff.Title || ""}
                 onChange={(e, data) => setCookoff({ ...cookoff, Title: data.value as string })}
+            />
+            <Form.Input
+                label="Event Code"
+                placeholder="Optional Event Code"
+                value={cookoff.EventCode || ""}
+                onChange={(e, data) => setCookoff({ ...cookoff, EventCode: data.value })}
             />
             <Form.Group>
                 <Form.Input
@@ -77,7 +81,7 @@ const CookoffForm: React.FC = () => {
                     label="Event Start Date"
                     placeholder="Event Start Date"
                     type="datetime-local"
-                    value={cookoff.EventStartDate}
+                    value={cookoff.EventStartDate || ""}
                     onChange={(e, { value }) => setCookoff({ ...cookoff, EventStartDate: `${value}:00` as string })}
                 />
                 <Form.Input
@@ -86,7 +90,7 @@ const CookoffForm: React.FC = () => {
                     label="Event End Date"
                     type="datetime-local"
                     placeholder="Event End Date"
-                    value={cookoff.EventEndDate}
+                    value={cookoff.EventEndDate || ""}
                     onChange={(e, { value }) => {
                         setCookoff({ ...cookoff, EventEndDate: `${value}:00` as string });
                     }}

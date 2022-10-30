@@ -34,7 +34,7 @@ const CookoffWinnersAndLosers: React.FC<CookoffWinnersAndLosersProps> = ({ resul
                     icon="trophy"
                     content={
                         <>
-                            {winners[0].ParticipantName}'s entry, {winners[0].Title}, is the winner!
+                            {winners[0].ParticipantName}&apos;s entry, {winners[0].Title}, is the winner!
                         </>
                     }
                 />
@@ -47,7 +47,7 @@ const CookoffWinnersAndLosers: React.FC<CookoffWinnersAndLosersProps> = ({ resul
                     icon="trophy"
                     content={
                         <>
-                            There's a {winners.length}-way tie!
+                            There&apos;s a {winners.length}-way tie!
                             <br />
                             {winners.map((w) => w.ParticipantName).join(", ")} have to rock-paper-scissors for the ladle.
                         </>
@@ -58,7 +58,7 @@ const CookoffWinnersAndLosers: React.FC<CookoffWinnersAndLosersProps> = ({ resul
                 <Header size="huge" color="red" block>
                     <Image src={boot} />
                     <Header.Content>
-                        {losers[0].ParticipantName}'s entry, {losers[0].Title}, takes the shoe!
+                        {losers[0].ParticipantName}&apos;s entry, {losers[0].Title}, takes the shoe!
                     </Header.Content>
                 </Header>
             )}
@@ -66,7 +66,7 @@ const CookoffWinnersAndLosers: React.FC<CookoffWinnersAndLosersProps> = ({ resul
                 <Header size="huge" color="red" block>
                     <Image src={boot} />
                     <Header.Content>
-                        There's a {losers.length}-way tie!
+                        There&apos;s a {losers.length}-way tie!
                         <br />
                         {losers.map((w) => w.ParticipantName).join(", ")} have to rock-paper-scissors for the shoe.
                     </Header.Content>

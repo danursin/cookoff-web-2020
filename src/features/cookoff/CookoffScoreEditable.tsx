@@ -16,9 +16,9 @@ interface CookoffScoreEditableProps {
 const iconSize: SemanticSIZES = "large";
 const scoreOptions: DropdownItemProps[] = [
     { key: 0, value: undefined, text: "Unscored", icon: <Icon name="question" color="grey" size={iconSize} /> },
-    { key: 1, value: 1, text: "1 - Ouch", icon: <Icon name="frown" color="red" size={iconSize} /> },
-    { key: 2, value: 2, text: "2 - Not Good", icon: <Icon name="frown" color="orange" size={iconSize} /> },
-    { key: 3, value: 3, text: "3 - Meh", icon: <Icon name="meh" color="yellow" size={iconSize} /> },
+    { key: 1, value: 1, text: "1 - Not for me", icon: <Icon name="frown" color="red" size={iconSize} /> },
+    { key: 2, value: 2, text: "2 - Meh", icon: <Icon name="frown" color="orange" size={iconSize} /> },
+    { key: 3, value: 3, text: "3 - Average", icon: <Icon name="meh" color="yellow" size={iconSize} /> },
     { key: 4, value: 4, text: "4 - Good", icon: <Icon name="smile" color="olive" size={iconSize} /> },
     { key: 5, value: 5, text: "5 - Excellent", icon: <Icon name="smile" color="green" size={iconSize} /> }
 ];

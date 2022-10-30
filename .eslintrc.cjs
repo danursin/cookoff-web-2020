@@ -6,6 +6,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:import/typescript",
         "plugin:react/jsx-runtime",
+        "plugin:react-hooks/recommended",
         "plugin:prettier/recommended",
         "prettier"
     ],

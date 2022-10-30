@@ -3,7 +3,6 @@
 import React, { useContext } from "react";
 
 import AppContext from "./AppContextProvider";
-import { useNavigate } from "react-router-dom";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;

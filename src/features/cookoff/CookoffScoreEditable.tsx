@@ -31,6 +31,7 @@ const CookoffScoreEditable: React.FC<CookoffScoreEditableProps> = (props: Cookof
     const [savingScore, setSavingScore] = useState<boolean>(false);
     const [savingComment, setSavingComment] = useState<boolean>(false);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     const debouncedTextUpdate = useCallback(
         debounce(async (comment: string | null) => {
             setSavingComment(true);

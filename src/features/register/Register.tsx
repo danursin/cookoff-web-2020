@@ -10,6 +10,18 @@ import config from "../../config";
 import decode from "jwt-decode";
 import { storeToken } from "../../shared/StorageProvider";
 
+interface RegistrationResponse {
+    existingUser?: Participant;
+    token?: string;
+}
+
+interface RegistrationRequest {
+    CookoffID: number;
+    Username: string;
+    Nickname?: string | undefined;
+    Force?: boolean;
+}
+
 const Register: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [eventCode, setEventCode] = useState<string>("");
@@ -24,6 +36,7 @@ const Register: React.FC = () => {
     const [search] = useSearchParams();
 
     const lookupCode = useCallback(async (code: string) => {
+        setLoading(true);
         try {
             const url = `${config.cookoffApiUrl}/cookoff/code`;
             const { data } = await axios.get(url, { params: { code } });
@@ -31,7 +44,15 @@ const Register: React.FC = () => {
             setPhase("register");
         } catch (err) {
             setErrorMessage(`Event Code "${code}" not recognized`);
+        } finally {
+            setLoading(false);
         }
+    }, []);
+
+    const doRegistration = useCallback(async (request: RegistrationRequest): Promise<RegistrationResponse> => {
+        const url = `${config.cookoffApiUrl}/cookoff/register`;
+        const { data } = await axios.post<RegistrationResponse>(url, request);
+        return data;
     }, []);
 
     useEffect(() => {
@@ -41,7 +62,7 @@ const Register: React.FC = () => {
                 await lookupCode(code);
             }
         })();
-    }, [search]);
+    }, [lookupCode, search]);
 
     const handleSubmit = async () => {
         setLoading(true);
@@ -50,19 +71,34 @@ const Register: React.FC = () => {
             await lookupCode(eventCode);
         } else {
             try {
-                const url = `${config.cookoffApiUrl}/cookoff/register`;
-                const { data } = await axios.post(url, {
-                    CookoffID: cookoff?.CookoffID,
+                const registrationRequest: RegistrationRequest = {
+                    CookoffID: cookoff?.CookoffID as number,
                     Username: username,
                     Nickname: nickname || undefined
-                });
-                const token = data[config.accessTokenName];
-                const user: Participant = decode(token);
-                setUser(user);
-                storeToken(token);
-                navigate("/dashboard");
+                };
+                let data = await doRegistration(registrationRequest);
+
+                if (data.existingUser) {
+                    const confirmationMessage = `We found an existing user with username "${username}". 
+                    
+If this is you, click OK to complete your registration. 
+                    
+Otherwise, cancel and choose a different username.`;
+                    if (window.confirm(confirmationMessage)) {
+                        registrationRequest.Force = true;
+                        data = await doRegistration(registrationRequest);
+                    }
+                }
+
+                if (data.token) {
+                    const token = data.token;
+                    const user: Participant = decode(token);
+                    setUser(user);
+                    storeToken(token);
+                    navigate("/dashboard");
+                }
             } catch (err) {
-                setErrorMessage(`Registration not successful`);
+                setErrorMessage(`Oops! Registration failed`);
             }
         }
         setLoading(false);
